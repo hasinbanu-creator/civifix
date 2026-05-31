@@ -346,3 +346,184 @@ async def get_roles(
             errors=str(e),
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
+
+
+# =========================
+# ADMIN DASHBOARD STATS
+# =========================
+
+@router.get(
+    "/stats",
+    summary="Get admin dashboard statistics",
+    dependencies=[Depends(require_role("SUPER_ADMIN"))]
+)
+async def get_admin_stats(
+    current_user: Dict[str, Any] = Depends(get_current_super_admin)
+):
+    """Get overall admin statistics (SUPER_ADMIN only)"""
+    try:
+        from bson import ObjectId
+
+        total_districts = await db.districts.count_documents({})
+        total_wards = await db.wards.count_documents({})
+        total_inspectors = await db.users.count_documents({"role": "INSPECTOR"})
+        total_workers = await db.users.count_documents({"role": "WORKER"})
+        total_complaints = await db.complaints.count_documents({})
+
+        return ResponseHandler.success(
+            message="Statistics retrieved",
+            data={
+                "total_districts": total_districts,
+                "total_wards": total_wards,
+                "total_inspectors": total_inspectors,
+                "total_workers": total_workers,
+                "total_complaints": total_complaints
+            }
+        )
+    except Exception as e:
+        return ResponseHandler.error(
+            message="Failed to retrieve statistics",
+            errors=str(e),
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+
+@router.get(
+    "/inspectors",
+    summary="Get inspectors",
+    dependencies=[Depends(require_role("DISTRICT_ADMIN", "SUPER_ADMIN"))]
+)
+async def get_inspectors(
+    current_user: Dict[str, Any] = Depends(get_current_admin)
+):
+    """Get all inspectors (filtered by district for DISTRICT_ADMIN)"""
+    try:
+        query = {"role": "INSPECTOR"}
+
+        # DISTRICT_ADMIN can only see inspectors in their district
+        if current_user.get("role") == "DISTRICT_ADMIN":
+            query["district"] = current_user.get("district")
+
+        inspectors = await db.users.find(query).to_list(length=1000)
+
+        result = []
+        for inspector in inspectors:
+            # Get ward info if exists
+            ward = None
+            if inspector.get("ward_id"):
+                ward = await db.wards.find_one({"_id": ObjectId(inspector["ward_id"])})
+
+            result.append({
+                "_id": str(inspector["_id"]),
+                "name": inspector.get("name"),
+                "email": inspector.get("email"),
+                "ward_name": ward.get("ward_name") if ward else None,
+                "status": inspector.get("status", "ACTIVE")
+            })
+
+        return ResponseHandler.success(
+            message="Inspectors retrieved",
+            data=result
+        )
+    except Exception as e:
+        return ResponseHandler.error(
+            message="Failed to retrieve inspectors",
+            errors=str(e),
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+
+@router.get(
+    "/workers",
+    summary="Get workers",
+    dependencies=[Depends(require_role("DISTRICT_ADMIN", "SUPER_ADMIN"))]
+)
+async def get_workers(
+    current_user: Dict[str, Any] = Depends(get_current_admin)
+):
+    """Get all workers (filtered by district for DISTRICT_ADMIN)"""
+    try:
+        from bson import ObjectId
+
+        query = {"role": "WORKER"}
+
+        # DISTRICT_ADMIN can only see workers in their district
+        if current_user.get("role") == "DISTRICT_ADMIN":
+            query["district"] = current_user.get("district")
+
+        workers = await db.users.find(query).to_list(length=1000)
+
+        result = []
+        for worker in workers:
+            # Get ward info if exists
+            ward = None
+            if worker.get("ward_id"):
+                ward = await db.wards.find_one({"_id": ObjectId(worker["ward_id"])})
+
+            # Count active complaints assigned to this worker
+            active_tasks = await db.complaints.count_documents({
+                "assigned_to": ObjectId(worker["_id"]),
+                "status": {"$in": ["PENDING", "IN_PROGRESS"]}
+            })
+
+            result.append({
+                "_id": str(worker["_id"]),
+                "name": worker.get("name"),
+                "email": worker.get("email"),
+                "ward_name": ward.get("ward_name") if ward else None,
+                "active_tasks": active_tasks
+            })
+
+        return ResponseHandler.success(
+            message="Workers retrieved",
+            data=result
+        )
+    except Exception as e:
+        return ResponseHandler.error(
+            message="Failed to retrieve workers",
+            errors=str(e),
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+
+@router.get(
+    "/wards",
+    summary="Get wards",
+    dependencies=[Depends(require_role("DISTRICT_ADMIN", "SUPER_ADMIN"))]
+)
+async def get_wards(
+    current_user: Dict[str, Any] = Depends(get_current_admin)
+):
+    """Get all wards (filtered by district for DISTRICT_ADMIN)"""
+    try:
+        from bson import ObjectId
+
+        query = {}
+
+        # DISTRICT_ADMIN can only see wards in their district
+        if current_user.get("role") == "DISTRICT_ADMIN":
+            query["district_id"] = ObjectId(current_user.get("district"))
+
+        wards = await db.wards.find(query).to_list(length=1000)
+
+        result = []
+        for ward in wards:
+            complaint_count = await db.complaints.count_documents({"ward_id": ward["_id"]})
+
+            result.append({
+                "_id": str(ward["_id"]),
+                "ward_name": ward.get("ward_name"),
+                "zone": ward.get("zone"),
+                "complaint_count": complaint_count
+            })
+
+        return ResponseHandler.success(
+            message="Wards retrieved",
+            data=result
+        )
+    except Exception as e:
+        return ResponseHandler.error(
+            message="Failed to retrieve wards",
+            errors=str(e),
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )

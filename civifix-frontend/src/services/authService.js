@@ -88,6 +88,63 @@ export const authService = {
     const token = await AsyncStorage.getItem("authToken");
     return !!token;
   },
+
+  // ─── /auth/me ───────────────────────────────────────────────────────────────
+  getMe: async () => {
+    const res = await api.get(ENDPOINTS.GET_PROFILE);
+    return unwrapResponse(res);
+  },
+
+  // ─── SUPER ADMIN ─────────────────────────────────────────────────────────────
+  getAdminStats: async () => {
+    const res = await api.get("/api/v1/admin/stats");
+    return unwrapResponse(res);
+  },
+
+  // ─── DISTRICT ADMIN ──────────────────────────────────────────────────────────
+  getInspectors: async () => {
+    const res = await api.get("/api/v1/admin/inspectors");
+    return unwrapResponse(res);
+  },
+
+  getWorkers: async () => {
+    const res = await api.get("/api/v1/admin/workers");
+    return unwrapResponse(res);
+  },
+
+  getWards: async () => {
+    const res = await api.get("/api/v1/admin/wards");
+    return unwrapResponse(res);
+  },
+
+  getDistrictUsers: async () => {
+    const res = await api.get("/api/v1/admin/users");
+    return unwrapResponse(res);
+  },
+
+  // ─── INSPECTOR ───────────────────────────────────────────────────────────────
+  getWardComplaints: async ({ page = 1, limit = 20, status } = {}) => {
+    const params = { page, limit };
+    if (status) params.status = status;
+    const res = await api.get("/api/v1/inspector/complaints", { params });
+    return unwrapResponse(res);
+  },
+
+  getWardWorkers: async () => {
+    const res = await api.get("/api/v1/inspector/workers");
+    return unwrapResponse(res);
+  },
+
+  // ─── WORKER ──────────────────────────────────────────────────────────────────
+  getAssignedComplaints: async ({ page = 1, limit = 20, status } = {}) => {
+    const params = { page, limit };
+    if (status) params.status = status;
+    const res = await api.get("/api/v1/worker/complaints", { params });
+    return unwrapResponse(res);
+  },
+
 };
+
+
 
 export default authService;

@@ -19,6 +19,9 @@ from app.api.v1.admin_routes import router as admin_router
 from app.api.v1.wards_routes import router as wards_router
 from app.api.v1.complaints_routes import router as complaints_router
 from app.api.v1.districts_routes import router as districts_router
+from app.api.v1.dashboard_routes import router as dashboard_router
+from app.api.v1.inspector_routes import router as inspector_router
+from app.api.v1.worker_routes import router as worker_router
 from app.db.indexes import create_indexes
 
 # Setup logging
@@ -76,6 +79,24 @@ app.include_router(
     districts_router,
     prefix="/api/v1/admin",
     tags=["District Management"]
+)
+
+app.include_router(
+    dashboard_router,
+    prefix="/api/v1/dashboard",
+    tags=["Dashboard"]
+)
+
+app.include_router(
+    inspector_router,
+    prefix="/api/v1/inspector",
+    tags=["Inspector"]
+)
+
+app.include_router(
+    worker_router,
+    prefix="/api/v1/worker",
+    tags=["Worker"]
 )
 
 
