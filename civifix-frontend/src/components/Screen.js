@@ -2,6 +2,7 @@ import React from "react";
 import { ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, SPACING } from "../constants/theme";
+import { getAndroidTopPadding } from "../utils/layout";
 
 export const Screen = ({
   children,
@@ -29,7 +30,9 @@ export const Screen = ({
   );
 
   return (
-    <SafeAreaView style={[{ flex: 1, backgroundColor }, style]}>
+    <SafeAreaView
+      style={[{ flex: 1, backgroundColor, paddingTop: getAndroidTopPadding() }, style]}
+    >
       {scroll ? (
         <ScrollView
           keyboardShouldPersistTaps="handled"

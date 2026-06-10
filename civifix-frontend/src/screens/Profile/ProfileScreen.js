@@ -32,7 +32,7 @@ const initials = (name = "") =>
 // ─── SUB-COMPONENTS ──────────────────────────────────────────────────────────
 
 const Pill = ({ label, color, bg }) => (
-  <View style={{ backgroundColor: bg, borderRadius: 999, paddingHorizontal: 10, paddingVertical: 3, alignSelf: "flex-start" }}>
+  <View style={{ backgroundColor: bg, borderRadius: 999, paddingHorizontal: SPACING.sm, paddingVertical: SPACING.xs, alignSelf: "flex-start" }}>
     <Text style={{ color, fontSize: 10, fontWeight: "800" }}>{label}</Text>
   </View>
 );
@@ -40,8 +40,8 @@ const Pill = ({ label, color, bg }) => (
 const InfoRow = ({ icon, value, color }) => {
   if (!value) return null;
   return (
-    <View style={{ flexDirection: "row", alignItems: "center", marginTop: 6 }}>
-      <Icon name={icon} size={13} color="rgba(255,255,255,0.7)" style={{ marginRight: 5 }} />
+    <View style={{ flexDirection: "row", alignItems: "center", marginTop: SPACING.sm }}>
+      <Icon name={icon} size={13} color="rgba(255,255,255,0.7)" style={{ marginRight: SPACING.sm }} />
       <Text style={{ color: "rgba(255,255,255,0.9)", fontSize: FONT_SIZES.xs, flex: 1 }} numberOfLines={1}>
         {value}
       </Text>
@@ -52,7 +52,7 @@ const InfoRow = ({ icon, value, color }) => {
 const StatBadge = ({ value, label }) => (
   <View style={{ alignItems: "center", paddingHorizontal: SPACING.md }}>
     <Text style={{ color: "#fff", fontSize: FONT_SIZES.lg, fontWeight: "900" }}>{value ?? "—"}</Text>
-    <Text style={{ color: "rgba(255,255,255,0.75)", fontSize: 9.5, fontWeight: "600", marginTop: 1 }}>{label}</Text>
+    <Text style={{ color: "rgba(255,255,255,0.75)", fontSize: 9.5, fontWeight: "600", marginTop: SPACING.xs }}>{label}</Text>
   </View>
 );
 

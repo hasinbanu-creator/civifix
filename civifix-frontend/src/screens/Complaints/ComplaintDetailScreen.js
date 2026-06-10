@@ -13,6 +13,7 @@ import {
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import authService from "../../services/authService";
 import { getErrorMessage } from "../../services/api";
+import { SPACING } from "../../constants/theme";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -321,10 +322,10 @@ const styles = StyleSheet.create({
     backgroundColor: PRIMARY,
     flexDirection: "row",
     alignItems: "center",
-    paddingTop: Platform.OS === "ios" ? 52 : 16,
-    paddingBottom: 16,
-    paddingHorizontal: 16,
-    gap: 12,
+    paddingTop: Platform.OS === "ios" ? 52 : SPACING.lg,
+    paddingBottom: SPACING.lg,
+    paddingHorizontal: SPACING.lg,
+    gap: SPACING.md,
   },
   backBtn: {
     width: 36, height: 36, borderRadius: 10,
@@ -333,7 +334,7 @@ const styles = StyleSheet.create({
   },
   headerCenter: { flex: 1 },
   headerTitle: { color: "#fff", fontSize: 17, fontWeight: "800", letterSpacing: -0.3 },
-  headerSub:   { color: "rgba(255,255,255,0.65)", fontSize: 11, marginTop: 1 },
+  headerSub:   { color: "rgba(255,255,255,0.65)", fontSize: 11, marginTop: SPACING.xs },
   headerStatusDot: {
     width: 10, height: 10, borderRadius: 5,
     borderWidth: 2, borderColor: "rgba(255,255,255,0.5)",
@@ -341,33 +342,33 @@ const styles = StyleSheet.create({
 
   /* ── STATES ── */
   centerState: {
-    flex: 1, alignItems: "center", justifyContent: "center", padding: 32, gap: 12,
+    flex: 1, alignItems: "center", justifyContent: "center", padding: SPACING.xxl, gap: SPACING.md,
   },
-  centerStateText: { color: GRAY_400, fontSize: 14, marginTop: 8 },
+  centerStateText: { color: GRAY_400, fontSize: 14, marginTop: SPACING.sm },
   errorIconWrap: {
     width: 72, height: 72, borderRadius: 36,
     backgroundColor: "#FEF2F2", alignItems: "center", justifyContent: "center",
-    marginBottom: 4,
+    marginBottom: SPACING.xs,
   },
   errorTitle: { fontSize: 17, fontWeight: "700", color: GRAY_800 },
   errorSub:   { fontSize: 13, color: GRAY_400, textAlign: "center", lineHeight: 20 },
   retryBtn: {
-    marginTop: 8, backgroundColor: PRIMARY,
-    paddingHorizontal: 24, paddingVertical: 12, borderRadius: 12,
+    marginTop: SPACING.sm, backgroundColor: PRIMARY,
+    paddingHorizontal: SPACING.xl, paddingVertical: SPACING.md, borderRadius: 12,
   },
   retryText: { color: "#fff", fontWeight: "700", fontSize: 14 },
 
-  scroll: { paddingHorizontal: 16, paddingTop: 16 },
+  scroll: { paddingHorizontal: SPACING.lg, paddingTop: SPACING.lg },
 
   /* ── HERO CARD ── */
   heroCard: {
     borderRadius: 18,
     borderWidth: 1.5,
-    padding: 16,
-    marginBottom: 12,
+    padding: SPACING.lg,
+    marginBottom: SPACING.md,
   },
   heroTop: {
-    flexDirection: "row", alignItems: "center", gap: 12, marginBottom: 14,
+    flexDirection: "row", alignItems: "center", gap: SPACING.md, marginBottom: SPACING.md,
   },
   heroIconWrap: {
     width: 52, height: 52, borderRadius: 14,
@@ -375,16 +376,16 @@ const styles = StyleSheet.create({
   },
   heroMeta: { flex: 1 },
   heroType: { fontSize: 16, fontWeight: "800", color: GRAY_800, letterSpacing: -0.2 },
-  heroId:   { fontSize: 12, color: GRAY_400, marginTop: 2, fontWeight: "500" },
+  heroId:   { fontSize: 12, color: GRAY_400, marginTop: SPACING.xs, fontWeight: "500" },
   heroBottom: {
-    flexDirection: "row", alignItems: "center", flexWrap: "wrap", gap: 8,
+    flexDirection: "row", alignItems: "center", flexWrap: "wrap", gap: SPACING.sm,
   },
   heroDate: { fontSize: 11, color: GRAY_400, marginLeft: "auto" },
 
   /* ── BADGES ── */
   badge: {
-    flexDirection: "row", alignItems: "center", gap: 4,
-    paddingHorizontal: 10, paddingVertical: 4,
+    flexDirection: "row", alignItems: "center", gap: SPACING.xs,
+    paddingHorizontal: SPACING.sm, paddingVertical: SPACING.xs,
     borderRadius: 20, borderWidth: 1,
   },
   badgeText: { fontSize: 11, fontWeight: "700" },
@@ -393,17 +394,17 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: "#fff",
     borderRadius: 18,
-    padding: 18,
-    marginBottom: 12,
+    padding: SPACING.lg,
+    marginBottom: SPACING.md,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05, shadowRadius: 8, elevation: 2,
   },
-  cardDivider: { height: 1, backgroundColor: GRAY_100, marginVertical: 16 },
+  cardDivider: { height: 1, backgroundColor: GRAY_100, marginVertical: SPACING.lg },
 
   /* ── SECTION TITLE ── */
   sectionTitle: {
-    flexDirection: "row", alignItems: "center", gap: 8, marginBottom: 14,
+    flexDirection: "row", alignItems: "center", gap: SPACING.sm, marginBottom: SPACING.lg,
   },
   sectionIconWrap: {
     width: 26, height: 26, borderRadius: 7,
@@ -413,35 +414,35 @@ const styles = StyleSheet.create({
 
   /* ── INFO ROW ── */
   infoRow: {
-    flexDirection: "row", alignItems: "flex-start", gap: 10, marginBottom: 12,
+    flexDirection: "row", alignItems: "flex-start", gap: SPACING.md, marginBottom: SPACING.md,
   },
   infoIconWrap: {
     width: 30, height: 30, borderRadius: 8,
     backgroundColor: GRAY_100, alignItems: "center", justifyContent: "center",
-    marginTop: 1, flexShrink: 0,
+    marginTop: SPACING.xs, flexShrink: 0,
   },
   infoTextWrap: { flex: 1 },
   infoLabel: {
     fontSize: 10, fontWeight: "700", color: GRAY_400,
     letterSpacing: 0.6, textTransform: "uppercase",
   },
-  infoValue: { fontSize: 14, color: GRAY_800, marginTop: 2, lineHeight: 20 },
+  infoValue: { fontSize: 14, color: GRAY_800, marginTop: SPACING.xs, lineHeight: 20 },
 
   /* ── NOTE CARD ── */
   noteCard: {
     borderLeftWidth: 3,
     backgroundColor: GRAY_50,
     borderRadius: 10,
-    padding: 12,
-    marginBottom: 10,
+    padding: SPACING.md,
+    marginBottom: SPACING.md,
   },
-  noteHeader: { flexDirection: "row", alignItems: "center", gap: 6, marginBottom: 6 },
+  noteHeader: { flexDirection: "row", alignItems: "center", gap: SPACING.xs, marginBottom: SPACING.xs },
   noteLabel:  { fontSize: 11, fontWeight: "700", letterSpacing: 0.3 },
   noteValue:  { fontSize: 13, color: GRAY_600, lineHeight: 19 },
 
   /* ── HISTORY TIMELINE ── */
-  historyList: { paddingTop: 4 },
-  historyItem: { flexDirection: "row", gap: 12, marginBottom: 4 },
+  historyList: { paddingTop: SPACING.xs },
+  historyItem: { flexDirection: "row", gap: SPACING.md, marginBottom: SPACING.xs },
   timelineCol: { alignItems: "center", width: 24 },
   timelineDot: {
     width: 22, height: 22, borderRadius: 11,
@@ -449,23 +450,23 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   timelineLine: {
-    flex: 1, width: 2, backgroundColor: GRAY_100, marginTop: 4, marginBottom: -4,
+    flex: 1, width: 2, backgroundColor: GRAY_100, marginTop: SPACING.xs, marginBottom: -SPACING.xs,
   },
   historyContent: {
-    flex: 1, paddingBottom: 18,
+    flex: 1, paddingBottom: SPACING.lg,
   },
-  historyAction: { fontSize: 14, fontWeight: "700", color: GRAY_800, marginBottom: 6 },
+  historyAction: { fontSize: 14, fontWeight: "700", color: GRAY_800, marginBottom: SPACING.xs },
   historyStatusRow: {
-    flexDirection: "row", alignItems: "center", flexWrap: "wrap", gap: 4, marginBottom: 6,
+    flexDirection: "row", alignItems: "center", flexWrap: "wrap", gap: SPACING.xs, marginBottom: SPACING.xs,
   },
-  historyRemarks: { fontSize: 13, color: GRAY_600, lineHeight: 18, marginBottom: 4 },
+  historyRemarks: { fontSize: 13, color: GRAY_600, lineHeight: 18, marginBottom: SPACING.xs },
   historyTime:    { fontSize: 11, color: GRAY_400 },
 
   /* ── EMPTY HISTORY ── */
   emptyHistory: {
-    alignItems: "center", paddingVertical: 24, gap: 6,
+    alignItems: "center", paddingVertical: SPACING.xl, gap: SPACING.xs,
   },
-  emptyHistoryText: { fontSize: 14, fontWeight: "700", color: GRAY_600, marginTop: 4 },
+  emptyHistoryText: { fontSize: 14, fontWeight: "700", color: GRAY_600, marginTop: SPACING.xs },
   emptyHistorySub:  { fontSize: 12, color: GRAY_400, textAlign: "center", lineHeight: 18 },
 });
 

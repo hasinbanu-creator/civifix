@@ -84,7 +84,7 @@ const InputField = ({
         name={icon}
         size={16}
         color={value ? PRIMARY : GRAY_400}
-        style={multiline ? { marginTop: 2 } : undefined}
+        style={multiline ? { marginTop: SPACING.xs } : undefined}
       />
       <TextInput
         style={[styles.textInput, multiline && styles.textInputMulti]}
@@ -621,8 +621,8 @@ const styles = StyleSheet.create({
 
   headerBar: {
     backgroundColor: PRIMARY, flexDirection: "row", alignItems: "center",
-    paddingTop: Platform.OS === "ios" ? 52 : 16,
-    paddingBottom: 16, paddingHorizontal: 16, gap: 12,
+    paddingTop: Platform.OS === "ios" ? 52 : SPACING.lg,
+    paddingBottom: SPACING.lg, paddingHorizontal: SPACING.lg, gap: SPACING.md,
   },
   backBtn: {
     width: 36, height: 36, borderRadius: 10,
@@ -638,15 +638,15 @@ const styles = StyleSheet.create({
     alignItems: "center", justifyContent: "center",
   },
 
-  scroll: { paddingHorizontal: 16, paddingTop: 16 },
+  scroll: { paddingHorizontal: SPACING.lg, paddingTop: SPACING.lg },
 
   card: {
-    backgroundColor: "#fff", borderRadius: 18, padding: 18, marginBottom: 12,
+    backgroundColor: "#fff", borderRadius: 18, padding: SPACING.lg, marginBottom: SPACING.md,
     shadowColor: "#000", shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.06, shadowRadius: 10, elevation: 2,
   },
 
-  sectionHeader: { flexDirection: "row", alignItems: "center", gap: 10, marginBottom: 18 },
+  sectionHeader: { flexDirection: "row", alignItems: "center", gap: SPACING.md, marginBottom: SPACING.lg },
   sectionIconWrap: {
     width: 30, height: 30, borderRadius: 8,
     backgroundColor: PRIMARY_LIGHT, alignItems: "center", justifyContent: "center",
@@ -655,10 +655,10 @@ const styles = StyleSheet.create({
   sectionSub:   { fontSize: 11, color: GRAY_400, marginTop: 1 },
 
   // ── The one input pattern used everywhere ──
-  fieldGroup: { marginBottom: 16 },
+  fieldGroup: { marginBottom: SPACING.lg },
   fieldLabel: {
     fontSize: 11, fontWeight: "700", color: GRAY_600,
-    letterSpacing: 0.6, marginBottom: 7, textTransform: "uppercase",
+    letterSpacing: 0.6, marginBottom: SPACING.sm, textTransform: "uppercase",
   },
   inputWrap: {
     flexDirection: "row",
@@ -666,14 +666,14 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: GRAY_200,
     borderRadius: 12,
-    paddingHorizontal: 14,
-    paddingVertical: 13,       // uniform vertical padding — no minHeight tricks
-    gap: 10,
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.md,       // uniform vertical padding — no minHeight tricks
+    gap: SPACING.md,
     backgroundColor: GRAY_50,
   },
   inputWrapMulti: {
     alignItems: "flex-start",  // icon top-aligns with text
-    paddingVertical: 12,
+    paddingVertical: SPACING.md,
   },
   inputFocused:  { borderColor: PRIMARY, backgroundColor: PRIMARY_LIGHT },
   inputError:    { borderColor: ERROR,   backgroundColor: "#FEF2F2"     },
@@ -690,7 +690,7 @@ const styles = StyleSheet.create({
     minHeight: 80,
     textAlignVertical: "top",
   },
-  errorText: { color: ERROR, fontSize: 11, marginTop: 5, marginLeft: 2 },
+  errorText: { color: ERROR, fontSize: 11, marginTop: SPACING.xs, marginLeft: 2 },
 
   // ── Dropdown ──
   dropIconWrap: {
@@ -705,45 +705,45 @@ const styles = StyleSheet.create({
   },
   dropHandle: {
     width: 36, height: 4, borderRadius: 2,
-    backgroundColor: GRAY_200, alignSelf: "center", marginVertical: 12,
+    backgroundColor: GRAY_200, alignSelf: "center", marginVertical: SPACING.md,
   },
   dropSheetTitle: {
     fontSize: 15, fontWeight: "800", color: GRAY_800,
-    paddingHorizontal: 20, marginBottom: 8,
+    paddingHorizontal: SPACING.lg, marginBottom: SPACING.sm,
   },
-  dropSep:           { height: 1, backgroundColor: GRAY_100, marginHorizontal: 16 },
-  dropItem:          { flexDirection: "row", alignItems: "center", paddingHorizontal: 20, paddingVertical: 14, gap: 12 },
+  dropSep:           { height: 1, backgroundColor: GRAY_100, marginHorizontal: SPACING.lg },
+  dropItem:          { flexDirection: "row", alignItems: "center", paddingHorizontal: SPACING.lg, paddingVertical: SPACING.md, gap: SPACING.md },
   dropItemActive:    { backgroundColor: PRIMARY_LIGHT },
   dropItemIcon:      { width: 34, height: 34, borderRadius: 9, alignItems: "center", justifyContent: "center" },
   dropItemText:      { flex: 1, fontSize: 14, color: GRAY_800, fontWeight: "500" },
   dropItemTextActive:{ color: PRIMARY, fontWeight: "700" },
-  dropItemSub:       { fontSize: 11, color: GRAY_400, marginTop: 1 },
-  dropEmpty:         { alignItems: "center", padding: 28, gap: 8 },
+  dropItemSub:       { fontSize: 11, color: GRAY_400, marginTop: SPACING.xs },
+  dropEmpty:         { alignItems: "center", padding: SPACING.xxl, gap: SPACING.sm },
   dropEmptyText:     { color: GRAY_400, fontSize: 13 },
 
   // ── Priority ──
-  priorityRow: { flexDirection: "row", gap: 10 },
+  priorityRow: { flexDirection: "row", gap: SPACING.md },
   priorityBtn: {
-    flex: 1, borderRadius: 12, paddingVertical: 12,
-    alignItems: "center", justifyContent: "center", gap: 5,
+    flex: 1, borderRadius: 12, paddingVertical: SPACING.md,
+    alignItems: "center", justifyContent: "center", gap: SPACING.xs,
     backgroundColor: GRAY_50, borderWidth: 1.5, borderColor: GRAY_200,
   },
   priorityLabel: { fontSize: 12, fontWeight: "700", color: GRAY_400 },
 
   // ── GPS ──
   gpsBtn: {
-    flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8,
+    flexDirection: "row", alignItems: "center", justifyContent: "center", gap: SPACING.sm,
     borderWidth: 1.5, borderColor: PRIMARY, borderRadius: 12,
-    paddingVertical: 12, paddingHorizontal: 14,
-    backgroundColor: PRIMARY_LIGHT, marginBottom: 12,
+    paddingVertical: SPACING.md, paddingHorizontal: SPACING.md,
+    backgroundColor: PRIMARY_LIGHT, marginBottom: SPACING.md,
   },
   gpsBtnLoading: { opacity: 0.7 },
   gpsBtnText:    { color: PRIMARY, fontSize: 13, fontWeight: "700" },
   gpsFilled: {
-    flexDirection: "row", alignItems: "center", gap: 8,
+    flexDirection: "row", alignItems: "center", gap: SPACING.sm,
     backgroundColor: "#ECFDF5", borderRadius: 10,
-    paddingVertical: 10, paddingHorizontal: 12,
-    borderWidth: 1, borderColor: "#A7F3D0", marginBottom: 14,
+    paddingVertical: SPACING.md, paddingHorizontal: SPACING.md,
+    borderWidth: 1, borderColor: "#A7F3D0", marginBottom: SPACING.md,
   },
   gpsFilledText: { flex: 1, color: "#065F46", fontSize: 12, fontWeight: "600" },
 
@@ -752,24 +752,24 @@ const styles = StyleSheet.create({
     flexDirection: "row", alignItems: "center",
     backgroundColor: PRIMARY_LIGHT, borderRadius: 14,
     borderWidth: 1, borderColor: "#BFDBFE",
-    padding: 14, marginBottom: 12, gap: 12,
+    padding: SPACING.md, marginBottom: SPACING.md, gap: SPACING.md,
   },
   summaryIconWrap:   { width: 40, height: 40, borderRadius: 10, alignItems: "center", justifyContent: "center" },
   summaryReadyLabel: { fontSize: 10, color: GRAY_400, fontWeight: "600", textTransform: "uppercase", letterSpacing: 0.5 },
-  summaryTitle:      { fontSize: 13, color: GRAY_800, fontWeight: "700", marginTop: 2 },
-  summaryPriBadge:   { borderRadius: 20, paddingHorizontal: 10, paddingVertical: 4 },
+  summaryTitle:      { fontSize: 13, color: GRAY_800, fontWeight: "700", marginTop: SPACING.xs },
+  summaryPriBadge:   { borderRadius: 20, paddingHorizontal: SPACING.sm, paddingVertical: SPACING.xs },
   summaryPriText:    { fontSize: 11, fontWeight: "800" },
 
   // ── Server error ──
   serverErrorBox: {
-    flexDirection: "row", alignItems: "center", gap: 8,
-    backgroundColor: "#FEF2F2", borderRadius: 12, padding: 14, marginBottom: 12,
+    flexDirection: "row", alignItems: "center", gap: SPACING.sm,
+    backgroundColor: "#FEF2F2", borderRadius: 12, padding: SPACING.md, marginBottom: SPACING.md,
   },
   serverErrorText: { color: ERROR, fontSize: 12, flex: 1, fontWeight: "600" },
 
   // ── Submit ──
   submitWrap: { borderRadius: 14, overflow: "hidden" },
-  submitBtn:  { paddingVertical: 16, alignItems: "center", justifyContent: "center", flexDirection: "row", gap: 8 },
+  submitBtn:  { paddingVertical: SPACING.lg, alignItems: "center", justifyContent: "center", flexDirection: "row", gap: SPACING.sm },
   submitText: { color: "#fff", fontSize: 15, fontWeight: "900", letterSpacing: 0.5 },
 });
 
@@ -777,34 +777,34 @@ const styles = StyleSheet.create({
 const ss = StyleSheet.create({
   overlay: {
     flex: 1, backgroundColor: "rgba(0,0,0,0.55)",
-    justifyContent: "center", alignItems: "center", paddingHorizontal: 24,
+    justifyContent: "center", alignItems: "center", paddingHorizontal: SPACING.xl,
   },
   sheet: {
-    backgroundColor: "#fff", borderRadius: 28, padding: 28,
+    backgroundColor: "#fff", borderRadius: 28, padding: SPACING.xxl,
     width: "100%", alignItems: "center",
     shadowColor: "#000", shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.18, shadowRadius: 24, elevation: 12,
   },
-  checkCircleOuter:   { marginBottom: 20, alignItems: "center", justifyContent: "center" },
+  checkCircleOuter:   { marginBottom: SPACING.xl, alignItems: "center", justifyContent: "center" },
   checkCircleInner:   { width: 80, height: 80, borderRadius: 40, backgroundColor: "#059669", alignItems: "center", justifyContent: "center", zIndex: 2 },
   pulseRing:          { position: "absolute", width: 100, height: 100, borderRadius: 50, backgroundColor: "#059669", opacity: 0.15 },
-  successTitle:       { fontSize: 22, fontWeight: "900", color: GRAY_800, marginBottom: 10, letterSpacing: -0.4, textAlign: "center" },
-  successSub:         { fontSize: 14, color: GRAY_600, textAlign: "center", lineHeight: 22, marginBottom: 16 },
+  successTitle:       { fontSize: 22, fontWeight: "900", color: GRAY_800, marginBottom: SPACING.sm, letterSpacing: -0.4, textAlign: "center" },
+  successSub:         { fontSize: 14, color: GRAY_600, textAlign: "center", lineHeight: 22, marginBottom: SPACING.lg },
   successHighlight:   { color: PRIMARY, fontWeight: "800" },
-  idPill:             { flexDirection: "row", alignItems: "center", gap: 6, backgroundColor: PRIMARY_LIGHT, borderRadius: 20, paddingHorizontal: 14, paddingVertical: 6, borderWidth: 1, borderColor: "#BFDBFE", marginBottom: 20 },
+  idPill:             { flexDirection: "row", alignItems: "center", gap: SPACING.sm, backgroundColor: PRIMARY_LIGHT, borderRadius: 20, paddingHorizontal: SPACING.md, paddingVertical: SPACING.xs, borderWidth: 1, borderColor: "#BFDBFE", marginBottom: SPACING.xl },
   idText:             { color: PRIMARY, fontSize: 12, fontWeight: "700" },
-  timelineStrip:      { flexDirection: "row", alignItems: "center", width: "100%", marginBottom: 16 },
-  timelineStep:       { alignItems: "center", gap: 4 },
+  timelineStrip:      { flexDirection: "row", alignItems: "center", width: "100%", marginBottom: SPACING.lg },
+  timelineStep:       { alignItems: "center", gap: SPACING.xs },
   timelineDot:        { width: 28, height: 28, borderRadius: 14, alignItems: "center", justifyContent: "center" },
   timelineDotInactive:{ backgroundColor: GRAY_100 },
   timelineLabel:      { fontSize: 9, color: GRAY_400, fontWeight: "600", textAlign: "center" },
-  timelineConnector:  { flex: 1, height: 2, backgroundColor: GRAY_200, marginBottom: 16 },
-  timeBadge:          { flexDirection: "row", alignItems: "center", gap: 8, backgroundColor: "#FFFBEB", borderRadius: 12, paddingVertical: 10, paddingHorizontal: 14, borderWidth: 1, borderColor: "#FDE68A", width: "100%", marginBottom: 24 },
+  timelineConnector:  { flex: 1, height: 2, backgroundColor: GRAY_200, marginBottom: SPACING.lg },
+  timeBadge:          { flexDirection: "row", alignItems: "center", gap: SPACING.sm, backgroundColor: "#FFFBEB", borderRadius: 12, paddingVertical: SPACING.md, paddingHorizontal: SPACING.md, borderWidth: 1, borderColor: "#FDE68A", width: "100%", marginBottom: SPACING.xl },
   timeBadgeText:      { color: "#92400E", fontSize: 13 },
-  actionRow:          { flexDirection: "row", gap: 12, width: "100%" },
-  btnSecondary:       { flex: 1, paddingVertical: 13, borderRadius: 12, borderWidth: 1.5, borderColor: GRAY_200, alignItems: "center", justifyContent: "center" },
+  actionRow:          { flexDirection: "row", gap: SPACING.md, width: "100%" },
+  btnSecondary:       { flex: 1, paddingVertical: SPACING.md, borderRadius: 12, borderWidth: 1.5, borderColor: GRAY_200, alignItems: "center", justifyContent: "center" },
   btnSecondaryText:   { color: GRAY_600, fontSize: 14, fontWeight: "700" },
-  btnPrimary:         { flex: 2, paddingVertical: 13, borderRadius: 12, backgroundColor: PRIMARY, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6 },
+  btnPrimary:         { flex: 2, paddingVertical: SPACING.md, borderRadius: 12, backgroundColor: PRIMARY, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: SPACING.xs },
   btnPrimaryText:     { color: "#fff", fontSize: 14, fontWeight: "800" },
 });
 

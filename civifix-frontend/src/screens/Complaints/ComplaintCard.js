@@ -73,15 +73,15 @@ export const ComplaintCard = ({ complaint, onPress }) => {
         width: 4, backgroundColor: typeMeta.color, borderRadius: 4,
       }} />
 
-      <View style={{ paddingLeft: 16, paddingRight: SPACING.md, paddingVertical: SPACING.md }}>
+      <View style={{ paddingLeft: SPACING.lg, paddingRight: SPACING.md, paddingVertical: SPACING.md }}>
 
         {/* Top row: icon + title + status pill */}
-        <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 6 }}>
+        <View style={{ flexDirection: "row", alignItems: "center", marginBottom: SPACING.xs }}>
           <View style={{
             width: 32, height: 32, borderRadius: 8,
             backgroundColor: `${typeMeta.color}14`,
             alignItems: "center", justifyContent: "center",
-            marginRight: 10,
+            marginRight: SPACING.sm,
           }}>
             <Icon name={typeMeta.icon} size={17} color={typeMeta.color} />
           </View>
@@ -99,10 +99,10 @@ export const ComplaintCard = ({ complaint, onPress }) => {
             flexDirection: "row", alignItems: "center",
             backgroundColor: status.bg,
             borderRadius: 999,
-            paddingHorizontal: 8, paddingVertical: 3,
+            paddingHorizontal: SPACING.sm, paddingVertical: SPACING.xs,
             marginLeft: 8,
           }}>
-            <Icon name={status.icon} size={10} color={status.color} style={{ marginRight: 3 }} />
+            <Icon name={status.icon} size={10} color={status.color} style={{ marginRight: SPACING.xs }} />
             <Text style={{ color: status.color, fontSize: 10, fontWeight: "800" }}>
               {status.label}
             </Text>
@@ -110,12 +110,12 @@ export const ComplaintCard = ({ complaint, onPress }) => {
         </View>
 
         {/* Description */}
-        <Text numberOfLines={2} style={{
+          <Text numberOfLines={2} style={{
           fontSize: FONT_SIZES.xs,
           color: "#64748B",
           lineHeight: 17,
-          marginBottom: 8,
-          paddingLeft: 42, // align under title
+          marginBottom: SPACING.sm,
+          paddingLeft: SPACING.xxl, // align under title
         }}>
           {desc}
         </Text>
@@ -123,13 +123,13 @@ export const ComplaintCard = ({ complaint, onPress }) => {
         {/* Bottom row: ID + ward + date */}
         <View style={{
           flexDirection: "row", alignItems: "center",
-          paddingLeft: 42,
-          gap: 10,
+          paddingLeft: SPACING.xxl,
+          gap: SPACING.sm,
         }}>
           {!!id && (
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Icon name="pound" size={10} color="#94A3B8" />
-              <Text style={{ color: "#94A3B8", fontSize: 10, fontWeight: "700", marginLeft: 1 }}>
+                <Icon name="pound" size={10} color="#94A3B8" />
+              <Text style={{ color: "#94A3B8", fontSize: 10, fontWeight: "700", marginLeft: SPACING.xs }}>
                 {id}
               </Text>
             </View>
@@ -139,7 +139,7 @@ export const ComplaintCard = ({ complaint, onPress }) => {
               <Text style={{ color: "#CBD5E1", fontSize: 10 }}>·</Text>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <Icon name="map-marker-outline" size={10} color="#94A3B8" />
-                <Text style={{ color: "#94A3B8", fontSize: 10, marginLeft: 2 }}>{ward}</Text>
+                <Text style={{ color: "#94A3B8", fontSize: 10, marginLeft: SPACING.xs }}>{ward}</Text>
               </View>
             </>
           )}
@@ -148,7 +148,7 @@ export const ComplaintCard = ({ complaint, onPress }) => {
               <Text style={{ color: "#CBD5E1", fontSize: 10 }}>·</Text>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <Icon name="calendar-outline" size={10} color="#94A3B8" />
-                <Text style={{ color: "#94A3B8", fontSize: 10, marginLeft: 2 }}>{date}</Text>
+                <Text style={{ color: "#94A3B8", fontSize: 10, marginLeft: SPACING.xs }}>{date}</Text>
               </View>
             </>
           )}

@@ -8,7 +8,8 @@ import ProfileScreen from "../screens/Profile/ProfileScreen";
 import ComplaintsListScreen from "../screens/Complaints/ComplaintsListScreen";
 import CreateComplaintScreen from "../screens/Complaints/CreateComplaintScreen";
 import ComplaintDetailScreen from "../screens/Complaints/ComplaintDetailScreen";
-import { COLORS } from "../constants/theme";
+import { COLORS, SPACING } from "../constants/theme";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -57,6 +58,7 @@ const ProfileStack = () => {
 };
 
 export const AppStack = () => {
+  const insets = useSafeAreaInsets();
   return (
     <Tab.Navigator
       screenOptions={{
@@ -67,14 +69,14 @@ export const AppStack = () => {
           borderTopWidth: 1,
           borderTopColor: COLORS.border,
           backgroundColor: COLORS.card,
-          paddingTop: 6,
-          paddingBottom: 8,
-          height: 64,
+          paddingTop: SPACING.sm,
+          paddingBottom: (insets.bottom || SPACING.sm) + SPACING.sm,
+          height: 64 + (insets.bottom || 0),
         },
         tabBarLabelStyle: {
           fontSize: 11,
           fontWeight: "600",
-          marginTop: 2,
+          marginTop: SPACING.xs,
         },
       }}
     >

@@ -48,11 +48,11 @@ export const Header = ({
             {title}
           </Text>
           {subtitle && (
-            <Text
+                <Text
               style={{
                 fontSize: FONT_SIZES.sm,
                 color: COLORS.textLight,
-                marginTop: 2,
+                marginTop: SPACING.xs,
               }}
             >
               {subtitle}
