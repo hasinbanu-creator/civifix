@@ -353,43 +353,36 @@ const SuperAdminDashboard = ({ navigation, meData, user }) => {
 };
 
 const DistrictAdminDashboard = ({ navigation, meData, user }) => {
-  const [data, setData]       = useState({ inspectors: [], workers: [], wards: [], users: [], complaints: [] });
-  const [loading, setLoading] = useState(true);
+  const [dashboard, setDashboard] = useState(null);
+  const [loading, setLoading]     = useState(true);
 
   useEffect(() => { load(); }, []);
 
   const load = async () => {
     setLoading(true);
     try {
-      const [insRes, workerRes, wardRes, usersRes, compRes] = await Promise.all([
-        authService.getInspectors?.()    ?? Promise.resolve([]),
-        authService.getWorkers?.()       ?? Promise.resolve([]),
-        authService.getWards?.()         ?? Promise.resolve([]),
-        authService.getDistrictUsers?.() ?? Promise.resolve([]),
-        authService.getComplaints?.()    ?? Promise.resolve([]),
-      ]);
-      setData({
-        inspectors: getItems(insRes).slice(0, 5),
-        workers:    getItems(workerRes).slice(0, 5),
-        wards:      getItems(wardRes).slice(0, 5),
-        users:      getItems(usersRes).slice(0, 5),
-        complaints: getItems(compRes).slice(0, 5),
-      });
+      const res = await authService.getDistrictAdminDashboard?.();
+      setDashboard(res?.data ?? res ?? null);
     } catch (e) { console.error(e); }
     finally { setLoading(false); }
   };
 
+  const stats = dashboard?.stats ?? {};
+  const wardsSummary = dashboard?.wards_summary ?? {};
+  const topPerformers = dashboard?.top_performers ?? [];
+  const activities = dashboard?.recent_activities ?? [];
+
   const profileStats = [
-    { value: data.inspectors.length, label: "Inspectors" },
-    { value: data.workers.length,    label: "Workers"    },
-    { value: data.complaints.length, label: "Complaints" },
+    { value: stats.total_complaints ?? 0, label: "Complaints" },
+    { value: stats.pending ?? 0,          label: "Pending" },
+    { value: stats.resolved ?? 0,         label: "Resolved" },
   ];
 
   const metrics = [
-    { icon: "map-marker-radius", value: data.wards.length,      label: "Wards",      color: COLORS.primary, bg: "#DBEAFE" },
-    { icon: "account-tie",       value: data.inspectors.length, label: "Inspectors", color: "#7C3AED",      bg: "#EDE9FE" },
-    { icon: "account-hard-hat",  value: data.workers.length,    label: "Workers",    color: "#059669",      bg: "#D1FAE5" },
-    { icon: "clipboard-list",    value: data.complaints.length, label: "Complaints", color: "#D97706",      bg: "#FEF3C7" },
+    { icon: "map-marker-radius", value: wardsSummary.total_wards ?? 0,       label: "Wards",        color: COLORS.primary, bg: "#DBEAFE" },
+    { icon: "alert-circle",      value: wardsSummary.unassigned_wards ?? 0,  label: "Unassigned",   color: "#D97706",      bg: "#FEF3C7" },
+    { icon: "checkbox-marked",   value: stats.resolved ?? 0,                 label: "Resolved",     color: "#059669",      bg: "#D1FAE5" },
+    { icon: "clipboard-list",    value: stats.total_complaints ?? 0,         label: "Total",        color: "#0891B2",      bg: "#CFFAFE" },
   ];
 
   const L = () => <View style={{ padding: SPACING.lg }}><ActivityIndicator color={COLORS.primary} /></View>;
@@ -401,166 +394,158 @@ const DistrictAdminDashboard = ({ navigation, meData, user }) => {
       <View style={{ flexDirection: "row", gap: SPACING.sm, flexWrap: "wrap" }}>
         {metrics.map((m, i) => <View key={i} style={{ width: "47.5%" }}><MetricCard {...m} /></View>)}
       </View>
-      <SectionTitle left="Complaints" right="View All" onRight={() => navigation.getParent()?.navigate("Complaints")} />
-      <ListCard empty={!loading && data.complaints.length === 0} emptyLabel="No complaints found.">
-        {loading ? <L /> : data.complaints.map((c, i) => (
-          <ComplaintItem key={c._id || i} complaint={c} index={i} total={data.complaints.length}
-            onPress={() => navigation.navigate("ComplaintDetail", { complaint: c })} />
+
+      {topPerformers.length > 0 && (
+        <>
+          <SectionTitle left="Top Performers" />
+          <ListCard empty={false} emptyLabel="">
+            {topPerformers.map((p, i) => (
+              <InfoItem key={i} index={i} total={topPerformers.length}
+                icon="star" iconColor="#D97706" iconBg="#FEF3C7"
+                primary={p.name || "Inspector"}
+                secondary={`${p.complaints_resolved || 0} resolved`}
+                badge={`#${i + 1}`} badgeColor="#D97706" badgeBg="#FEF3C7" />
+            ))}
+          </ListCard>
+        </>
+      )}
+
+      <SectionTitle left="Recent Activity" right="View All" onRight={() => navigation.getParent()?.navigate("Complaints")} />
+      <ListCard empty={!loading && activities.length === 0} emptyLabel="No activities found.">
+        {loading ? <L /> : activities.slice(0, 5).map((a, i) => (
+          <InfoItem key={a.id || i} index={i} total={Math.min(activities.length, 5)}
+            icon="clipboard-text" iconColor={COLORS.primary} iconBg="#DBEAFE"
+            primary={a.title || "Complaint"}
+            secondary={a.status || ""}
+            badge={a.status} badgeColor={COLORS.primary} badgeBg="#DBEAFE" />
         ))}
       </ListCard>
-      <SectionTitle left="Inspectors" right="View All" onRight={() => navigation.navigate("InspectorsList")} />
-      <ListCard empty={!loading && data.inspectors.length === 0} emptyLabel="No inspectors assigned.">
-        {loading ? <L /> : data.inspectors.map((ins, i) => (
-          <InfoItem key={ins._id || i} index={i} total={data.inspectors.length}
-            icon="account-tie" iconColor="#0891B2" iconBg="#CFFAFE"
-            primary={ins.name || ins.email || "Inspector"}
-            secondary={ins.ward_name ? `Ward: ${ins.ward_name}` : ins.email}
-            badge={ins.status ?? "Active"} badgeColor="#059669" badgeBg="#D1FAE5" />
-        ))}
-      </ListCard>
-      <SectionTitle left="Workers" right="View All" onRight={() => navigation.navigate("WorkersList")} />
-      <ListCard empty={!loading && data.workers.length === 0} emptyLabel="No workers assigned.">
-        {loading ? <L /> : data.workers.map((w, i) => (
-          <InfoItem key={w._id || i} index={i} total={data.workers.length}
-            icon="account-hard-hat" iconColor="#059669" iconBg="#D1FAE5"
-            primary={w.name || w.email || "Worker"}
-            secondary={w.ward_name ? `Ward: ${w.ward_name}` : w.email}
-            badge={w.active_tasks != null ? `${w.active_tasks} tasks` : undefined}
-            badgeColor={COLORS.primary} badgeBg="#DBEAFE" />
-        ))}
-      </ListCard>
-      <SectionTitle left="Wards" right="View All" onRight={() => navigation.navigate("WardsList")} />
-      <ListCard empty={!loading && data.wards.length === 0} emptyLabel="No wards found.">
-        {loading ? <L /> : data.wards.map((w, i) => (
-          <InfoItem key={w._id || i} index={i} total={data.wards.length}
-            icon="map-marker-radius" iconColor={COLORS.primary} iconBg="#DBEAFE"
-            primary={w.ward_name || w.name || "Ward"}
-            secondary={w.zone ?? w.area ?? undefined}
-            badge={w.complaint_count != null ? `${w.complaint_count} complaints` : undefined}
-            badgeColor="#D97706" badgeBg="#FEF3C7" />
-        ))}
-      </ListCard>
-      <SectionTitle left="District Users" right="View All" onRight={() => navigation.navigate("UsersList")} />
-      <ListCard empty={!loading && data.users.length === 0} emptyLabel="No users found.">
-        {loading ? <L /> : data.users.map((u, i) => (
-          <InfoItem key={u._id || i} index={i} total={data.users.length}
-            icon="account-outline" iconColor="#7C3AED" iconBg="#EDE9FE"
-            primary={u.name || u.email || "User"}
-            secondary={u.email}
-            badge={u.role} badgeColor="#7C3AED" badgeBg="#EDE9FE" />
-        ))}
-      </ListCard>
+
+      <SectionTitle left="Ward Management" right="View All" onRight={() => navigation.navigate("Wards", { screen: "WardList" })} />
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Wards", { screen: "WardList" })}
+        style={{ backgroundColor: COLORS.card, borderRadius: 12, padding: SPACING.lg, ...SHADOWS.md, marginBottom: SPACING.lg }}
+      >
+        <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+          <View>
+            <Text style={{ fontSize: FONT_SIZES.md, fontWeight: "700", color: COLORS.textDark }}>
+              {wardsSummary.total_wards ?? 0} Total Wards
+            </Text>
+            <Text style={{ fontSize: FONT_SIZES.xs, color: COLORS.textLight, marginTop: 4 }}>
+              {wardsSummary.active_wards ?? 0} active • {wardsSummary.unassigned_wards ?? 0} unassigned
+            </Text>
+          </View>
+          <Icon name="chevron-right" size={20} color={COLORS.primary} />
+        </View>
+      </TouchableOpacity>
     </>
   );
 };
 
 const InspectorDashboard = ({ navigation, meData, user }) => {
-  const [complaints, setComplaints] = useState([]);
-  const [workers, setWorkers]       = useState([]);
-  const [loading, setLoading]       = useState(true);
+  const [dashboard, setDashboard] = useState(null);
+  const [loading, setLoading]     = useState(true);
 
   useEffect(() => { load(); }, []);
 
   const load = async () => {
     setLoading(true);
     try {
-      const [compRes, workerRes] = await Promise.all([
-        authService.getWardComplaints?.() ?? Promise.resolve([]),
-        authService.getWardWorkers?.()    ?? Promise.resolve([]),
-      ]);
-      setComplaints(getItems(compRes));
-      setWorkers(getItems(workerRes).slice(0, 10));
+      const res = await authService.getInspectorDashboard?.();
+      setDashboard(res?.data ?? res ?? null);
     } catch (e) { console.error(e); }
     finally { setLoading(false); }
   };
 
-  const counts = useMemo(() => ({
-    open:    complaints.filter((c) => c.status === "OPEN").length,
-    working: complaints.filter((c) => c.status === "WORKING").length,
-    review:  complaints.filter((c) => c.status === "APPROVAL").length,
-    closed:  complaints.filter((c) => c.status === "CLOSED").length,
-  }), [complaints]);
+  const stats = dashboard?.stats ?? {};
+  const wardInfo = dashboard?.ward_info;
+  const complaints = dashboard?.ward_complaints ?? [];
+  const workers = dashboard?.assigned_workers ?? 0;
 
   const metrics = [
-    { icon: "alert-circle-outline", value: counts.open,    label: "Open",        color: "#D97706",      bg: "#FEF3C7" },
-    { icon: "progress-wrench",      value: counts.working, label: "In Progress", color: COLORS.primary, bg: "#DBEAFE" },
-    { icon: "eye-check-outline",    value: counts.review,  label: "In Review",   color: "#0891B2",      bg: "#CFFAFE" },
-    { icon: "check-circle-outline", value: counts.closed,  label: "Resolved",    color: "#059669",      bg: "#D1FAE5" },
+    { icon: "alert-circle-outline", value: stats.pending,    label: "Pending",      color: "#D97706",      bg: "#FEF3C7" },
+    { icon: "progress-wrench",      value: stats.in_progress, label: "In Progress", color: COLORS.primary, bg: "#DBEAFE" },
+    { icon: "eye-check-outline",    value: dashboard?.pending_approvals ?? 0, label: "For Review",  color: "#0891B2",      bg: "#CFFAFE" },
+    { icon: "check-circle-outline", value: stats.resolved,   label: "Resolved",    color: "#059669",      bg: "#D1FAE5" },
   ];
 
   const profileStats = [
-    { value: complaints.length, label: "Total"    },
-    { value: counts.open,       label: "Open"     },
-    { value: counts.closed,     label: "Resolved" },
+    { value: stats.total_complaints ?? 0, label: "Total"    },
+    { value: stats.pending ?? 0,          label: "Pending"  },
+    { value: stats.resolved ?? 0,         label: "Resolved" },
   ];
 
   return (
     <>
       <UserProfileCard meData={meData} user={user} stats={profileStats} />
-      <SectionTitle left="Ward Overview" />
+      {wardInfo && (
+        <>
+          <SectionTitle left={wardInfo.ward_name} />
+          <View style={{ backgroundColor: COLORS.card, borderRadius: 12, padding: SPACING.lg, ...SHADOWS.md, marginBottom: SPACING.lg }}>
+            <Text style={{ fontSize: FONT_SIZES.sm, color: COLORS.textLight }}>Ward Number</Text>
+            <Text style={{ fontSize: FONT_SIZES.md, fontWeight: "700", color: COLORS.textDark, marginTop: 4 }}>
+              #{wardInfo.ward_number}
+            </Text>
+          </View>
+        </>
+      )}
+      <SectionTitle left="Complaint Overview" />
       <View style={{ flexDirection: "row", gap: SPACING.sm, flexWrap: "wrap" }}>
         {metrics.map((m, i) => <View key={i} style={{ width: "47.5%" }}><MetricCard {...m} /></View>)}
       </View>
-      <SectionTitle left="Ward Complaints" right="View All" onRight={() => navigation.getParent()?.navigate("Complaints")} />
+      <SectionTitle left="Recent Complaints" right="View All" onRight={() => navigation.getParent()?.navigate("Complaints")} />
       <ListCard empty={!loading && complaints.length === 0} emptyLabel="No complaints in your ward.">
         {loading
           ? <View style={{ padding: SPACING.lg }}><ActivityIndicator color={COLORS.primary} /></View>
           : complaints.slice(0, 5).map((c, i, arr) => (
               <ComplaintItem key={c._id || i} complaint={c} index={i} total={arr.length}
-                onPress={() => navigation.navigate("ComplaintDetail", { complaint: c, canAssign: true, workers })} />
+                onPress={() => navigation.navigate("ComplaintDetail", { complaint: c })} />
             ))
         }
       </ListCard>
-      <SectionTitle left="My Ward Workers" right="View All" onRight={() => navigation.navigate("WorkersList")} />
-      <ListCard empty={!loading && workers.length === 0} emptyLabel="No workers in your ward.">
-        {loading
-          ? <View style={{ padding: SPACING.lg }}><ActivityIndicator color={COLORS.primary} /></View>
-          : workers.map((w, i) => (
-              <InfoItem key={w._id || i} index={i} total={workers.length}
-                icon="account-hard-hat" iconColor="#059669" iconBg="#D1FAE5"
-                primary={w.name || w.email || "Worker"}
-                secondary={w.email}
-                badge={w.active_tasks != null ? `${w.active_tasks} tasks` : "Available"}
-                badgeColor={w.active_tasks > 0 ? "#D97706" : "#059669"}
-                badgeBg={w.active_tasks > 0 ? "#FEF3C7" : "#D1FAE5"} />
-            ))
-        }
+      <SectionTitle left={`Ward Workers (${workers})`} right="View All" onRight={() => navigation.navigate("WorkersList")} />
+      <ListCard empty={!loading && workers === 0} emptyLabel="No workers assigned to your ward.">
+        <InfoItem
+          icon="account-hard-hat" iconColor="#059669" iconBg="#D1FAE5"
+          primary={`${workers} Workers`}
+          secondary="Assigned to your ward"
+          badge={workers > 0 ? `Active` : "None"}
+          badgeColor={workers > 0 ? "#059669" : "#999"}
+          badgeBg={workers > 0 ? "#D1FAE5" : "#EEE"} />
       </ListCard>
     </>
   );
 };
 
 const WorkerDashboard = ({ navigation, meData, user }) => {
-  const [assigned, setAssigned] = useState([]);
-  const [loading, setLoading]   = useState(true);
+  const [dashboard, setDashboard] = useState(null);
+  const [loading, setLoading]     = useState(true);
 
   useEffect(() => { load(); }, []);
 
   const load = async () => {
     setLoading(true);
     try {
-      const res = await authService.getAssignedComplaints?.() ?? Promise.resolve([]);
-      setAssigned(getItems(res));
+      const res = await authService.getWorkerDashboard?.();
+      setDashboard(res?.data ?? res ?? null);
     } catch (e) { console.error(e); }
     finally { setLoading(false); }
   };
 
-  const counts = useMemo(() => ({
-    open:    assigned.filter((c) => c.status === "OPEN").length,
-    working: assigned.filter((c) => c.status === "WORKING").length,
-    closed:  assigned.filter((c) => c.status === "CLOSED").length,
-  }), [assigned]);
+  const tasks = dashboard?.assigned_tasks ?? {};
+  const assignments = dashboard?.recent_assignments ?? [];
+  const completionRate = dashboard?.completion_rate ?? 0;
 
   const metrics = [
-    { icon: "clipboard-alert-outline", value: assigned.length, label: "Assigned",    color: COLORS.primary, bg: "#DBEAFE" },
-    { icon: "progress-wrench",         value: counts.working,  label: "In Progress", color: "#D97706",      bg: "#FEF3C7" },
-    { icon: "check-circle-outline",    value: counts.closed,   label: "Completed",   color: "#059669",      bg: "#D1FAE5" },
+    { icon: "clipboard-alert-outline", value: tasks.total ?? 0,      label: "Assigned",    color: COLORS.primary, bg: "#DBEAFE" },
+    { icon: "progress-wrench",         value: tasks.pending ?? 0,    label: "Pending",     color: "#D97706",      bg: "#FEF3C7" },
+    { icon: "check-circle-outline",    value: tasks.completed ?? 0,  label: "Completed",   color: "#059669",      bg: "#D1FAE5" },
   ];
 
   const profileStats = [
-    { value: assigned.length, label: "Assigned" },
-    { value: counts.working,  label: "Active"   },
-    { value: counts.closed,   label: "Done"     },
+    { value: tasks.total ?? 0,     label: "Total" },
+    { value: tasks.pending ?? 0,   label: "Active"   },
+    { value: tasks.completed ?? 0, label: "Done"     },
   ];
 
   return (
@@ -570,13 +555,34 @@ const WorkerDashboard = ({ navigation, meData, user }) => {
       <View style={{ flexDirection: "row", gap: SPACING.sm }}>
         {metrics.map((m, i) => <MetricCard key={i} {...m} />)}
       </View>
-      <SectionTitle left="Assigned Complaints" right="View All" onRight={() => navigation.getParent()?.navigate("Complaints")} />
-      <ListCard empty={!loading && assigned.length === 0} emptyLabel="No tasks assigned yet.">
+      {completionRate > 0 && (
+        <>
+          <SectionTitle left="Performance" />
+          <View style={{ backgroundColor: COLORS.card, borderRadius: 12, padding: SPACING.lg, ...SHADOWS.md, marginBottom: SPACING.lg }}>
+            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+              <Text style={{ fontSize: FONT_SIZES.sm, color: COLORS.textLight }}>Completion Rate</Text>
+              <Text style={{ fontSize: FONT_SIZES.lg, fontWeight: "700", color: COLORS.primary }}>
+                {completionRate}%
+              </Text>
+            </View>
+            <View style={{ height: 6, backgroundColor: "#E5E7EB", borderRadius: 3, marginTop: SPACING.md }}>
+              <View style={{
+                height: "100%",
+                backgroundColor: COLORS.primary,
+                borderRadius: 3,
+                width: `${completionRate}%`,
+              }} />
+            </View>
+          </View>
+        </>
+      )}
+      <SectionTitle left="Assigned Tasks" right="View All" onRight={() => navigation.getParent()?.navigate("Complaints")} />
+      <ListCard empty={!loading && assignments.length === 0} emptyLabel="No tasks assigned yet.">
         {loading
           ? <View style={{ padding: SPACING.lg }}><ActivityIndicator color={COLORS.primary} /></View>
-          : assigned.map((c, i) => (
-              <ComplaintItem key={c._id || i} complaint={c} index={i} total={assigned.length}
-                onPress={() => navigation.navigate("ComplaintDetail", { complaint: c, workerView: true })} />
+          : assignments.map((c, i) => (
+              <ComplaintItem key={c._id || i} complaint={c} index={i} total={assignments.length}
+                onPress={() => navigation.navigate("ComplaintDetail", { complaint: c })} />
             ))
         }
       </ListCard>

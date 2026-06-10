@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useContext } from "react";
 import { TouchableOpacity, View } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
+import { AuthContext } from "../context/AuthContext";
 import DashboardScreen from "../screens/Dashboard/DashboardScreen";
 import ProfileScreen from "../screens/Profile/ProfileScreen";
 import ComplaintsListScreen from "../screens/Complaints/ComplaintsListScreen";
 import CreateComplaintScreen from "../screens/Complaints/CreateComplaintScreen";
 import ComplaintDetailScreen from "../screens/Complaints/ComplaintDetailScreen";
+import WardListScreen from "../screens/Ward/WardListScreen";
+import WardDetailScreen from "../screens/Ward/WardDetailScreen";
 import { COLORS, SPACING } from "../constants/theme";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -57,8 +60,24 @@ const ProfileStack = () => {
   );
 };
 
+const WardStack = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+        cardStyle: { backgroundColor: "#F9FAFB" },
+      }}
+    >
+      <Stack.Screen name="WardList" component={WardListScreen} />
+      <Stack.Screen name="WardDetail" component={WardDetailScreen} />
+    </Stack.Navigator>
+  );
+};
+
 export const AppStack = () => {
   const insets = useSafeAreaInsets();
+  const { user } = useContext(AuthContext);
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -100,6 +119,21 @@ export const AppStack = () => {
           ),
         }}
       />
+
+      {/* Wards tab for DISTRICT_ADMIN and INSPECTOR */}
+      {(user?.role === "DISTRICT_ADMIN" || user?.role === "INSPECTOR") && (
+        <Tab.Screen
+          name="Wards"
+          component={WardStack}
+          options={{
+            tabBarLabel: "Wards",
+            tabBarIcon: ({ color, size }) => (
+              <Icon name="map-outline" color={color} size={size} />
+            ),
+          }}
+        />
+      )}
+
       <Tab.Screen
         name="Raise"
         component={DashboardStack}

@@ -57,6 +57,17 @@ export const ENDPOINTS = {
   GET_WARDS_BY_DISTRICT: (districtId) => `/wards/district/${districtId}`,
   SEARCH_WARDS: (districtId) => `/wards/search/${districtId}`,
   GET_DISTRICTS: "/admin/districts",
+
+  // Ward endpoints
+  GET_WARDS: "/wards/district",
+  GET_WARD_DETAIL: (wardId) => `/wards/${wardId}`,
+  GET_INSPECTOR_WARD: "/wards/inspector/assigned",
+  ASSIGN_INSPECTOR_TO_WARD: (wardId) => `/wards/${wardId}/assign-inspector`,
+
+  // Dashboard role-specific
+  GET_INSPECTOR_DASHBOARD: "/dashboard/inspector/dashboard",
+  GET_DISTRICT_ADMIN_DASHBOARD: "/dashboard/district-admin/dashboard",
+  GET_WORKER_DASHBOARD: "/dashboard/worker/dashboard",
 };
 
 export default ENDPOINTS;

@@ -112,11 +112,6 @@ export const authService = {
     return unwrapResponse(res);
   },
 
-  getWards: async () => {
-    const res = await api.get("/api/v1/admin/wards");
-    return unwrapResponse(res);
-  },
-
   getDistrictUsers: async () => {
     const res = await api.get("/api/v1/admin/users");
     return unwrapResponse(res);
@@ -143,15 +138,53 @@ export const authService = {
     return unwrapResponse(res);
   },
 
-  getWardsByDistrict: async (districtId, { page = 1, is_active = true, limit = 60} = {}) => {
+  getWardsByDistrict: async (districtId, { page = 1, is_active = true, limit = 60 } = {}) => {
     const res = await api.get(`/wards/district/${districtId}`, {
-      params: { page, is_active, limit }
+      params: { page, is_active, limit },
     });
     return unwrapResponse(res);
   },
 
-};
+  // ─── WARD MANAGEMENT ─────────────────────────────────────────────────────────
+  getWards: async ({ page = 1, limit = 20, is_active = true } = {}) => {
+    const res = await api.get("/wards/district", {
+      params: { page, limit, is_active },
+    });
+    return unwrapResponse(res);
+  },
 
+  getWardDetail: async (wardId) => {
+    const res = await api.get(`/wards/${wardId}`);
+    return unwrapResponse(res);
+  },
 
+  getInspectorWard: async () => {
+    const res = await api.get("/wards/inspector/assigned");
+    return unwrapResponse(res);
+  },
+
+  assignInspectorToWard: async (wardId, inspectorId) => {
+    const res = await api.post(`/wards/${wardId}/assign-inspector`, {
+      inspector_id: inspectorId,
+    });
+    return unwrapResponse(res);
+  },
+
+  // ─── DASHBOARD ROLE-SPECIFIC ────────────────────────────────────────────────
+  getInspectorDashboard: async () => {
+    const res = await api.get("/dashboard/inspector/dashboard");
+    return unwrapResponse(res);
+  },
+
+  getDistrictAdminDashboard: async () => {
+    const res = await api.get("/dashboard/district-admin/dashboard");
+    return unwrapResponse(res);
+  },
+
+  getWorkerDashboard: async () => {
+    const res = await api.get("/dashboard/worker/dashboard");
+    return unwrapResponse(res);
+  },
+}; // ← added missing closing brace
 
 export default authService;

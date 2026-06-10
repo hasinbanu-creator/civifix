@@ -119,6 +119,67 @@ const MenuItem = ({ icon, title, subtitle, color, onPress, danger, rightBadge, l
   </TouchableOpacity>
 );
 
+const WardInfoCard = ({ ward, onPress, wardLoading }) => {
+  if (!ward) return null;
+
+  return (
+    <TouchableOpacity
+      onPress={onPress}
+      activeOpacity={0.72}
+      disabled={wardLoading}
+      style={{
+        backgroundColor: COLORS.card,
+        borderRadius: 12,
+        padding: SPACING.lg,
+        marginBottom: SPACING.md,
+        borderLeftWidth: 4,
+        borderLeftColor: COLORS.primary,
+        ...SHADOWS.md,
+      }}
+    >
+      <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start" }}>
+        <View style={{ flex: 1 }}>
+          <Text style={{ fontSize: FONT_SIZES.md, fontWeight: "700", color: COLORS.textDark }}>
+            {ward.ward_name}
+          </Text>
+          <Text style={{ fontSize: FONT_SIZES.xs, color: COLORS.textLight, marginTop: 4 }}>
+            Ward #{ward.ward_number}
+          </Text>
+        </View>
+        <Icon name="map-marker" size={20} color={COLORS.primary} />
+      </View>
+
+      {ward.description && (
+        <Text
+          numberOfLines={2}
+          style={{
+            fontSize: FONT_SIZES.xs,
+            color: COLORS.textLight,
+            marginTop: SPACING.md,
+          }}
+        >
+          {ward.description}
+        </Text>
+      )}
+
+      <View style={{ marginTop: SPACING.md, flexDirection: "row", gap: SPACING.md }}>
+        <View style={{ flex: 1 }}>
+          <Text style={{ fontSize: FONT_SIZES.xs, color: COLORS.textLight }}>Complaints</Text>
+          <Text style={{ fontSize: FONT_SIZES.lg, fontWeight: "700", color: COLORS.primary, marginTop: 4 }}>
+            {ward.complaint_count || 0}
+          </Text>
+        </View>
+        <View style={{ flex: 1 }}>
+          <Text style={{ fontSize: FONT_SIZES.xs, color: COLORS.textLight }}>Active</Text>
+          <Text style={{ fontSize: FONT_SIZES.lg, fontWeight: "700", color: "#D97706", marginTop: 4 }}>
+            {ward.active_complaints || 0}
+          </Text>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+};
+
 // ─── ROLE-BASED MENU BUILDER ─────────────────────────────────────────────────
 
 const buildMenuSections = ({ role, navigation, meData }) => {
@@ -219,10 +280,17 @@ const buildMenuSections = ({ role, navigation, meData }) => {
 export const ProfileScreen = ({ navigation }) => {
   const { user, signOut } = useContext(AuthContext);
   const [meData, setMeData]   = useState(null);
+  const [wardData, setWardData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [meLoading, setMeLoading] = useState(true);
+  const [wardLoading, setWardLoading] = useState(false);
 
   useEffect(() => { loadMe(); }, []);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", loadWardData);
+    return unsubscribe;
+  }, [navigation, user?.role]);
 
   const loadMe = async () => {
     try {
@@ -230,6 +298,23 @@ export const ProfileScreen = ({ navigation }) => {
       setMeData(res?.data ?? null);
     } catch (e) { console.error("getMe failed:", e); }
     finally { setMeLoading(false); }
+  };
+
+  const loadWardData = async () => {
+    if (user?.role !== "INSPECTOR" && user?.role !== "DISTRICT_ADMIN") return;
+
+    try {
+      setWardLoading(true);
+      if (user?.role === "INSPECTOR") {
+        const res = await authService.getInspectorWard?.();
+        setWardData(res?.ward_info ?? res?.data ?? null);
+      }
+    } catch (e) {
+      console.warn("Ward data fetch failed:", e);
+      setWardData(null);
+    } finally {
+      setWardLoading(false);
+    }
   };
 
   const handleLogout = () => {
@@ -367,6 +452,33 @@ export const ProfileScreen = ({ navigation }) => {
 
         {/* ── Content ── */}
         <View style={{ paddingHorizontal: SPACING.lg }}>
+
+          {/* Ward Info Card for INSPECTOR */}
+          {role === "INSPECTOR" && (
+            <>
+              <SectionLabel>Assigned Ward</SectionLabel>
+              <WardInfoCard
+                ward={wardData}
+                wardLoading={wardLoading}
+                onPress={() => navigation.navigate("Wards", { screen: "WardList" })}
+              />
+            </>
+          )}
+
+          {/* Ward Info Card for DISTRICT_ADMIN */}
+          {role === "DISTRICT_ADMIN" && (
+            <>
+              <SectionLabel>Ward Management</SectionLabel>
+              <MenuItem
+                id="wards"
+                icon="map-marker-radius"
+                title="Manage Wards"
+                subtitle="View and manage all wards in your district"
+                color={COLORS.primary}
+                onPress={() => navigation.navigate("Wards", { screen: "WardList" })}
+              />
+            </>
+          )}
 
           {/* Role section */}
           {roleSection.length > 0 && (
