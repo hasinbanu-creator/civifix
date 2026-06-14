@@ -1,7 +1,29 @@
 """Authentication request/response schemas"""
-from pydantic import BaseModel, EmailStr, Field
+import re
+from pydantic import BaseModel, EmailStr, Field, validator
 from typing import Optional
 from enum import Enum
+
+# Stricter email regex — rejects leading/trailing dots, consecutive dots,
+# hyphens at start/end of domain labels, and malformed domain segments.
+_EMAIL_RE = re.compile(
+    r'^[a-zA-Z0-9]'                      # local must start with alnum
+    r'(?:[a-zA-Z0-9._%+\-]*'             # allowed local chars
+    r'[a-zA-Z0-9])?'                     # local must end with alnum
+    r'@'
+    r'(?!-)'                             # domain label must not start with -
+    r'(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-]*[a-zA-Z0-9])?\.)'  # domain labels
+    r'+[a-zA-Z]{2,}$'                   # TLD — at least 2 alpha chars
+)
+
+def _validate_strict_email(v: str) -> str:
+    v = v.strip().lower()
+    if '..' in v:
+        raise ValueError('Email must not contain consecutive dots')
+    if not _EMAIL_RE.match(v):
+        raise ValueError('Enter a valid email address')
+    return v
+
 
 class RegisterSchema(BaseModel):
     """User registration schema"""
@@ -10,6 +32,10 @@ class RegisterSchema(BaseModel):
     mobile_number: str = Field(..., min_length=10, max_length=10)
     address: str = Field(..., min_length=5, max_length=200)
     district: str = Field(..., min_length=2, max_length=50)
+
+    @validator('email', pre=True)
+    def email_strict(cls, v):
+        return _validate_strict_email(v)
 
     class Config:
         example = {
@@ -25,6 +51,10 @@ class LoginSchema(BaseModel):
     """Login schema"""
     email: EmailStr
 
+    @validator('email', pre=True)
+    def email_strict(cls, v):
+        return _validate_strict_email(v)
+
     class Config:
         example = {
             "email": "user@gmail.com"
@@ -35,6 +65,10 @@ class VerifyOTPSchema(BaseModel):
     """OTP verification schema"""
     email: EmailStr
     otp: str = Field(..., min_length=6, max_length=6)
+
+    @validator('email', pre=True)
+    def email_strict(cls, v):
+        return _validate_strict_email(v)
 
     class Config:
         example = {

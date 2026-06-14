@@ -133,8 +133,12 @@ export default function SignupPage() {
       newErrors.mobile_number = "Enter a valid 10-digit number";
     }
     if (!formData.email.trim()) newErrors.email = "Email is required";
-    else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
-      newErrors.email = "Enter a valid email";
+    else {
+      // Stricter validation matching backend: no leading/trailing dots, no consecutive dots, no hyphen at domain start
+      const strictEmailRe = /^[a-zA-Z0-9](?:[a-zA-Z0-9._%+\-]*[a-zA-Z0-9])?@(?!-)(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
+      if (/\.\.|^\.|\.$/.test(formData.email) || !strictEmailRe.test(formData.email)) {
+        newErrors.email = "Enter a valid email";
+      }
     }
     
     setErrors(newErrors);
@@ -261,10 +265,11 @@ export default function SignupPage() {
             <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 tracking-wider mb-2">FULL NAME</label>
+                  <label htmlFor="signup-name" className="block text-xs font-bold text-slate-500 tracking-wider mb-2">FULL NAME</label>
                   <div className={`flex items-center gap-3 border-2 rounded-xl px-4 py-3 bg-slate-50 ${errors.name ? 'border-red-500' : 'border-slate-100 focus-within:border-blue-500'}`}>
                     <User className="w-5 h-5 text-slate-400" />
                     <input
+                      id="signup-name"
                       type="text"
                       value={formData.name}
                       onChange={(e) => updateField("name", e.target.value)}
@@ -275,10 +280,11 @@ export default function SignupPage() {
                   {errors.name && <p className="text-red-500 text-xs mt-1 font-medium">{errors.name}</p>}
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 tracking-wider mb-2">MOBILE NUMBER</label>
+                  <label htmlFor="signup-mobile" className="block text-xs font-bold text-slate-500 tracking-wider mb-2">MOBILE NUMBER</label>
                   <div className={`flex items-center gap-3 border-2 rounded-xl px-4 py-3 bg-slate-50 ${errors.mobile_number ? 'border-red-500' : 'border-slate-100 focus-within:border-blue-500'}`}>
                     <span className="text-slate-800 font-bold text-sm pr-2 border-r-2 border-slate-200">🇮🇳 +91</span>
                     <input
+                      id="signup-mobile"
                       type="tel"
                       value={formData.mobile_number}
                       onChange={(e) => updateField("mobile_number", e.target.value)}
@@ -292,10 +298,11 @@ export default function SignupPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-500 tracking-wider mb-2">EMAIL ADDRESS</label>
+                <label htmlFor="signup-email" className="block text-xs font-bold text-slate-500 tracking-wider mb-2">EMAIL ADDRESS</label>
                 <div className={`flex items-center gap-3 border-2 rounded-xl px-4 py-3 bg-slate-50 ${errors.email ? 'border-red-500' : 'border-slate-100 focus-within:border-blue-500'}`}>
                   <Mail className="w-5 h-5 text-slate-400" />
                   <input
+                    id="signup-email"
                     type="email"
                     value={formData.email}
                     onChange={(e) => updateField("email", e.target.value)}

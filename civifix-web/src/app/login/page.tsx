@@ -43,7 +43,9 @@ export default function LoginPage() {
       setEmailError("Email is required");
       return false;
     }
-    if (!/^\S+@\S+\.\S+$/.test(email.trim())) {
+    // Stricter validation: rejects leading/trailing dots, consecutive dots, hyphen at domain start
+    const strictEmailRe = /^[a-zA-Z0-9](?:[a-zA-Z0-9._%+\-]*[a-zA-Z0-9])?@(?!-)(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
+    if (/\.\.|^\.|\.$/.test(email.trim()) || !strictEmailRe.test(email.trim())) {
       setEmailError("Enter a valid email");
       return false;
     }
@@ -217,12 +219,13 @@ export default function LoginPage() {
 
               <form onSubmit={handleEmailSubmit} className="space-y-6">
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 tracking-wider mb-2">
+                  <label htmlFor="email-input" className="block text-xs font-bold text-slate-500 tracking-wider mb-2">
                     EMAIL ADDRESS
                   </label>
                   <div className={`flex items-center gap-3 border-2 rounded-xl px-4 py-3 bg-slate-50 transition-colors ${emailError ? 'border-red-500' : 'border-slate-100 focus-within:border-blue-500 focus-within:bg-white'}`}>
                     <Mail className="w-5 h-5 text-slate-400" />
                     <input
+                      id="email-input"
                       type="email"
                       value={email}
                       onChange={(e) => {

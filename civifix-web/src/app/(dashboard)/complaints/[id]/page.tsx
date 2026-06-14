@@ -2,8 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import authService from "@/services/auth";
 import { useParams, useRouter } from "next/navigation";
 import { useComplaint } from "@/hooks/use-complaints";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   ArrowLeft,
   AlertCircle,
@@ -42,7 +44,9 @@ const STATUS_CONFIG: Record<string, { color: string, bg: string, border: string,
   OPEN:        { color: "text-blue-600", bg: "bg-blue-50", border: "border-blue-200", icon: FolderOpen, label: "Open" },
   ASSIGNED:    { color: "text-purple-600", bg: "bg-purple-50", border: "border-purple-200", icon: HardHat, label: "Assigned" },
   WORKING:     { color: "text-cyan-600", bg: "bg-cyan-50", border: "border-cyan-200", icon: Wrench, label: "In Progress" },
+  IN_PROGRESS: { color: "text-cyan-600", bg: "bg-cyan-50", border: "border-cyan-200", icon: Wrench, label: "In Progress" },
   CLOSED:      { color: "text-emerald-600", bg: "bg-emerald-50", border: "border-emerald-200", icon: CheckCircle2, label: "Resolved" },
+  RESOLVED:    { color: "text-emerald-600", bg: "bg-emerald-50", border: "border-emerald-200", icon: CheckCircle2, label: "Resolved" },
   REJECTED:    { color: "text-red-600", bg: "bg-red-50", border: "border-red-200", icon: XCircle, label: "Rejected" },
 };
 
@@ -104,9 +108,12 @@ export default function ComplaintDetailsPage() {
   const id = params.id as string;
   const { data, isLoading: loading, refetch } = useComplaint(id);
   const complaint: any = data;
+  const queryClient = useQueryClient();
 
   const [updating, setUpdating] = useState(false);
   const [showNotesModal, setShowNotesModal] = useState(false);
+  const [showRejectModal, setShowRejectModal] = useState(false);
+  const [showResolveModal, setShowResolveModal] = useState(false);
   const [newNote, setNewNote] = useState("");
 
   const updateStatus = async (newStatus: string) => {
@@ -117,6 +124,53 @@ export default function ComplaintDetailsPage() {
     } catch (e) {
       console.error(e);
       alert("Failed to update status");
+    } finally {
+      setUpdating(false);
+    }
+  };
+
+  const handleStartWork = async () => {
+    try {
+      setUpdating(true);
+      await authService.inspectorStartWork(id);
+      refetch();
+      queryClient.invalidateQueries({ queryKey: ["ward-complaints"] });
+      queryClient.invalidateQueries({ queryKey: ["complaints"] });
+    } catch (e) {
+      console.error(e);
+      alert("Failed to start work");
+    } finally {
+      setUpdating(false);
+    }
+  };
+
+  const handleRejectConfirm = async () => {
+    try {
+      setUpdating(true);
+      setShowRejectModal(false);
+      await authService.inspectorRejectComplaint(id);
+      refetch();
+      queryClient.invalidateQueries({ queryKey: ["ward-complaints"] });
+      queryClient.invalidateQueries({ queryKey: ["complaints"] });
+    } catch (e) {
+      console.error(e);
+      alert("Failed to reject complaint");
+    } finally {
+      setUpdating(false);
+    }
+  };
+
+  const handleResolveConfirm = async () => {
+    try {
+      setUpdating(true);
+      setShowResolveModal(false);
+      await authService.inspectorResolveComplaint(id);
+      refetch();
+      queryClient.invalidateQueries({ queryKey: ["ward-complaints"] });
+      queryClient.invalidateQueries({ queryKey: ["complaints"] });
+    } catch (e) {
+      console.error(e);
+      alert("Failed to resolve complaint");
     } finally {
       setUpdating(false);
     }
@@ -320,36 +374,56 @@ export default function ComplaintDetailsPage() {
           </div>
         )}
 
-        {/* Status Actions */}
-        {isInspectorOrWorker && complaint.status !== "CLOSED" && (
-          <div className="bg-white rounded-3xl p-6 shadow-xl shadow-slate-200/50 border border-slate-100 mb-6">
-            <div className="flex items-center gap-2 mb-6">
-              <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
-                <MoreVertical className="w-4 h-4 text-blue-600" />
+        {/* Inspector Actions — simplified workflow */}
+        {user?.role === "INSPECTOR" && (
+          <>
+            {/* OPEN: Start Work + Reject */}
+            {complaint.status === "OPEN" && (
+              <div className="bg-white rounded-3xl p-6 shadow-xl shadow-slate-200/50 border border-slate-100 mb-6">
+                <div className="flex items-center gap-2 mb-6">
+                  <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
+                    <MoreVertical className="w-4 h-4 text-blue-600" />
+                  </div>
+                  <h3 className="text-sm font-extrabold text-slate-800">Complaint Actions</h3>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    disabled={updating}
+                    onClick={handleStartWork}
+                    className="flex items-center justify-center gap-2 bg-blue-600 text-white rounded-xl py-3 text-sm font-bold shadow-md hover:bg-blue-700 disabled:opacity-50"
+                  >
+                    <Play className="w-4 h-4" /> Start Work
+                  </button>
+                  <button
+                    disabled={updating}
+                    onClick={() => setShowRejectModal(true)}
+                    className="flex items-center justify-center gap-2 bg-red-600 text-white rounded-xl py-3 text-sm font-bold shadow-md hover:bg-red-700 disabled:opacity-50"
+                  >
+                    <X className="w-4 h-4" /> Reject Complaint
+                  </button>
+                </div>
               </div>
-              <h3 className="text-sm font-extrabold text-slate-800">Update Status</h3>
-            </div>
-            <div className="grid grid-cols-2 gap-3 mb-4">
-              {complaint.status === "OPEN" && (
-                <button disabled={updating} onClick={() => updateStatus("WORKING")} className="flex items-center justify-center gap-2 bg-blue-600 text-white rounded-xl py-3 text-sm font-bold shadow-md hover:bg-blue-700 disabled:opacity-50">
-                  <Play className="w-4 h-4" /> Start Work
+            )}
+
+            {/* IN_PROGRESS: Resolve */}
+            {complaint.status === "IN_PROGRESS" && (
+              <div className="bg-white rounded-3xl p-6 shadow-xl shadow-slate-200/50 border border-slate-100 mb-6">
+                <div className="flex items-center gap-2 mb-6">
+                  <div className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                  </div>
+                  <h3 className="text-sm font-extrabold text-slate-800">Complaint Actions</h3>
+                </div>
+                <button
+                  disabled={updating}
+                  onClick={() => setShowResolveModal(true)}
+                  className="w-full flex items-center justify-center gap-2 bg-emerald-600 text-white rounded-xl py-3 text-sm font-bold shadow-md hover:bg-emerald-700 disabled:opacity-50"
+                >
+                  <Check className="w-4 h-4" /> Resolve Complaint
                 </button>
-              )}
-              {complaint.status === "WORKING" && (
-                <button disabled={updating} onClick={() => updateStatus("APPROVAL")} className="flex items-center justify-center gap-2 bg-cyan-600 text-white rounded-xl py-3 text-sm font-bold shadow-md hover:bg-cyan-700 disabled:opacity-50">
-                  <Clock className="w-4 h-4" /> Move to Review
-                </button>
-              )}
-              {complaint.status === "APPROVAL" && user?.role === "INSPECTOR" && (
-                <button disabled={updating} onClick={() => updateStatus("CLOSED")} className="flex items-center justify-center gap-2 bg-emerald-600 text-white rounded-xl py-3 text-sm font-bold shadow-md hover:bg-emerald-700 disabled:opacity-50">
-                  <Check className="w-4 h-4" /> Mark Resolved
-                </button>
-              )}
-            </div>
-            <button onClick={() => setShowNotesModal(true)} className="w-full flex items-center justify-center gap-2 bg-slate-100 text-slate-700 rounded-xl py-3 text-sm font-bold hover:bg-slate-200">
-              <PenSquare className="w-4 h-4" /> Add Note
-            </button>
-          </div>
+              </div>
+            )}
+          </>
         )}
 
         {/* Notes Modal */}
@@ -366,6 +440,72 @@ export default function ComplaintDetailsPage() {
               <div className="flex gap-3">
                 <button onClick={() => setShowNotesModal(false)} className="flex-1 bg-slate-100 text-slate-600 font-bold py-3 rounded-xl hover:bg-slate-200">Cancel</button>
                 <button disabled={updating || !newNote} onClick={addNote} className="flex-1 bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 disabled:opacity-50">Save Note</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Reject Confirmation Modal */}
+        {showRejectModal && (
+          <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center shrink-0">
+                  <XCircle className="w-5 h-5 text-red-600" />
+                </div>
+                <h3 className="text-lg font-black text-slate-800">Confirm Complaint Rejection</h3>
+              </div>
+              <p className="text-sm font-medium text-slate-600 leading-relaxed mb-6">
+                Have you physically inspected the reported location and confirmed that this complaint should be rejected?
+              </p>
+              <div className="flex gap-3">
+                <button
+                  disabled={updating}
+                  onClick={() => setShowRejectModal(false)}
+                  className="flex-1 bg-slate-100 text-slate-600 font-bold py-3 rounded-xl hover:bg-slate-200 disabled:opacity-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  disabled={updating}
+                  onClick={handleRejectConfirm}
+                  className="flex-1 bg-red-600 text-white font-bold py-3 rounded-xl hover:bg-red-700 disabled:opacity-50"
+                >
+                  Yes, Reject Complaint
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Resolve Confirmation Modal */}
+        {showResolveModal && (
+          <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center shrink-0">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+                </div>
+                <h3 className="text-lg font-black text-slate-800">Mark Complaint as Resolved</h3>
+              </div>
+              <p className="text-sm font-medium text-slate-600 leading-relaxed mb-6">
+                Have you verified that the issue has been successfully resolved?
+              </p>
+              <div className="flex gap-3">
+                <button
+                  disabled={updating}
+                  onClick={() => setShowResolveModal(false)}
+                  className="flex-1 bg-slate-100 text-slate-600 font-bold py-3 rounded-xl hover:bg-slate-200 disabled:opacity-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  disabled={updating}
+                  onClick={handleResolveConfirm}
+                  className="flex-1 bg-emerald-600 text-white font-bold py-3 rounded-xl hover:bg-emerald-700 disabled:opacity-50"
+                >
+                  Mark Resolved
+                </button>
               </div>
             </div>
           </div>
