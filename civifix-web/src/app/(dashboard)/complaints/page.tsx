@@ -24,24 +24,28 @@ import {
 } from "lucide-react";
 
 // --- Types ---
-type ComplaintStatus = "OPEN" | "WORKING" | "APPROVAL" | "CLOSED" | "REJECTED";
+type ComplaintStatus = "OPEN" | "WORKING" | "APPROVAL" | "CLOSED" | "REJECTED" | "IN_PROGRESS" | "RESOLVED";
 type ComplaintType = "ROAD_DAMAGE" | "POTHOLE" | "GARBAGE" | "STREETLIGHT" | "WATER_SUPPLY" | "DRAINAGE" | "SANITATION" | "TREE_CUTTING" | "CONSTRUCTION" | "OTHER";
 
 // --- Design Tokens ---
 const FILTERS = [
   { key: "ALL",         label: "All",         icon: ClipboardList },
   { key: "OPEN",        label: "Pending",      icon: FolderOpen },
+  { key: "IN_PROGRESS", label: "In Progress",  icon: Wrench },
   { key: "WORKING",     label: "In Progress",  icon: Wrench },
-  { key: "APPROVAL",    label: "For Review",   icon: Clock },
+  { key: "RESOLVED",    label: "Resolved",     icon: CheckCircle2 },
   { key: "CLOSED",      label: "Resolved",     icon: CheckCircle2 },
+  { key: "REJECTED",    label: "Rejected",     icon: XCircle },
 ];
 
 const STATUS_STYLES: Record<string, { label: string; color: string; bg: string }> = {
-  OPEN:     { label: "Pending",     color: "text-blue-600", bg: "bg-blue-100" },
-  WORKING:  { label: "In Progress", color: "text-amber-600",  bg: "bg-amber-100" },
-  APPROVAL: { label: "Review",      color: "text-cyan-600",  bg: "bg-cyan-100" },
-  CLOSED:   { label: "Resolved",    color: "text-emerald-600", bg: "bg-emerald-100" },
-  REJECTED: { label: "Rejected",    color: "text-red-600",   bg: "bg-red-100" },
+  OPEN:        { label: "Pending",     color: "text-blue-600",    bg: "bg-blue-100" },
+  WORKING:     { label: "In Progress", color: "text-amber-600",   bg: "bg-amber-100" },
+  IN_PROGRESS: { label: "In Progress", color: "text-cyan-600",    bg: "bg-cyan-100" },
+  APPROVAL:    { label: "Review",      color: "text-cyan-600",    bg: "bg-cyan-100" },
+  CLOSED:      { label: "Resolved",    color: "text-emerald-600", bg: "bg-emerald-100" },
+  RESOLVED:    { label: "Resolved",    color: "text-emerald-600", bg: "bg-emerald-100" },
+  REJECTED:    { label: "Rejected",    color: "text-red-600",     bg: "bg-red-100" },
 };
 
 const TYPE_META: Record<string, { icon: React.ElementType; color: string; bg: string; title: string }> = {
@@ -75,7 +79,8 @@ export default function ComplaintsListPage() {
   const activeQuery = isInspector ? inspectorQuery : isWorker ? workerQuery : citizenQuery;
   const loading = activeQuery.isLoading;
   const data: any = activeQuery.data;
-  const complaints = data?.complaints || [];
+  // Inspector API returns { complaints: [...] }, citizen API returns { data: [...] }
+  const complaints = data?.complaints || data?.data || [];
   const filteredComplaints = complaints;
   console.log("activeQuery.data", activeQuery.data);
   console.log("complaints", complaints);
@@ -91,8 +96,8 @@ export default function ComplaintsListPage() {
 
   const summaryChips = [
     { label: "Total", value: complaints.length, colorClass: "text-blue-600" },
-    { label: "Active", value: (counts.OPEN || 0) + (counts.WORKING || 0) + (counts.APPROVAL || 0), colorClass: "text-cyan-600" },
-    { label: "Resolved", value: counts.CLOSED || 0, colorClass: "text-emerald-600" },
+    { label: "Active", value: (counts.OPEN || 0) + (counts.WORKING || 0) + (counts.IN_PROGRESS || 0) + (counts.APPROVAL || 0), colorClass: "text-cyan-600" },
+    { label: "Resolved", value: (counts.CLOSED || 0) + (counts.RESOLVED || 0), colorClass: "text-emerald-600" },
     { label: "Rejected", value: counts.REJECTED || 0, colorClass: "text-red-600" },
   ];
 

@@ -208,6 +208,22 @@ export const authService = {
     const res = await api.get("/dashboard/worker/dashboard");
     return unwrapResponse(res);
   },
+
+  // ─── INSPECTOR COMPLAINT ACTIONS ─────────────────────────────────────────────
+  inspectorStartWork: async (complaintId: string | number): Promise<any> => {
+    const res = await api.put(`/inspector/complaints/${complaintId}/start-work`);
+    return unwrapResponse(res);
+  },
+
+  inspectorRejectComplaint: async (complaintId: string | number): Promise<any> => {
+    const res = await api.put(`/inspector/complaints/${complaintId}/reject`);
+    return unwrapResponse(res);
+  },
+
+  inspectorResolveComplaint: async (complaintId: string | number): Promise<any> => {
+    const res = await api.put(`/inspector/complaints/${complaintId}/resolve`);
+    return unwrapResponse(res);
+  },
 };
 
 export default authService;
