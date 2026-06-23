@@ -214,7 +214,7 @@ const storeSession = (session)=>{
     if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
     ;
 };
-const e2eMocksEnabled = process.env.NEXT_PUBLIC_E2E_MOCKS === "true";
+const e2eMocksEnabled = ("TURBOPACK compile-time value", "true") === "true";
 const clone = (value)=>JSON.parse(JSON.stringify(value));
 const e2eDistricts = [
     {
@@ -540,50 +540,44 @@ const getAssignedComplaints = ()=>{
 };
 const authService = {
     register: async (userData)=>{
-        if (e2eMocksEnabled) return {
+        if ("TURBOPACK compile-time truthy", 1) return {
             message: "OTP sent",
             user: userData
         };
-        const response = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].post(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$constants$2f$endpoints$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ENDPOINTS"].REGISTER, userData);
-        return (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["unwrapResponse"])(response);
+        //TURBOPACK unreachable
+        ;
+        const response = undefined;
     },
     login: async (email)=>{
-        if (e2eMocksEnabled) return {
+        if ("TURBOPACK compile-time truthy", 1) return {
             message: "OTP sent",
             email
         };
-        const response = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].post(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$constants$2f$endpoints$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ENDPOINTS"].LOGIN, {
-            email
-        });
-        return (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["unwrapResponse"])(response);
+        //TURBOPACK unreachable
+        ;
+        const response = undefined;
     },
     verifyLogin: async (email, otp)=>{
-        if (e2eMocksEnabled) {
+        if ("TURBOPACK compile-time truthy", 1) {
             const session = e2eSession();
             storeSession(session);
             return session;
         }
-        const response = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].post(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$constants$2f$endpoints$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ENDPOINTS"].VERIFY_LOGIN, {
-            email,
-            otp
-        });
-        const session = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["unwrapResponse"])(response);
-        storeSession(session);
-        return session;
+        //TURBOPACK unreachable
+        ;
+        const response = undefined;
+        const session = undefined;
     },
     verifyRegister: async (email, otp)=>{
-        if (e2eMocksEnabled) {
+        if ("TURBOPACK compile-time truthy", 1) {
             const session = e2eSession();
             storeSession(session);
             return session;
         }
-        const response = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].post(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$constants$2f$endpoints$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ENDPOINTS"].VERIFY_REGISTER, {
-            email,
-            otp
-        });
-        const session = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["unwrapResponse"])(response);
-        storeSession(session);
-        return session;
+        //TURBOPACK unreachable
+        ;
+        const response = undefined;
+        const session = undefined;
     },
     logout: async ()=>{
         try {
@@ -595,20 +589,22 @@ const authService = {
         ;
     },
     getProfile: async ()=>{
-        if (e2eMocksEnabled) return getRoleProfile(getMockRole());
-        const response = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].get(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$constants$2f$endpoints$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ENDPOINTS"].GET_PROFILE);
-        return (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["unwrapResponse"])(response);
+        if ("TURBOPACK compile-time truthy", 1) return getRoleProfile(getMockRole());
+        //TURBOPACK unreachable
+        ;
+        const response = undefined;
     },
     updateProfile: async (userData)=>{
-        if (e2eMocksEnabled) return {
+        if ("TURBOPACK compile-time truthy", 1) return {
             ...getRoleProfile(getMockRole()),
             ...userData
         };
-        const response = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].put(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$constants$2f$endpoints$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ENDPOINTS"].UPDATE_PROFILE, userData);
-        return (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["unwrapResponse"])(response);
+        //TURBOPACK unreachable
+        ;
+        const response = undefined;
     },
     getComplaints: async ({ page = 1, limit = 10, status } = {})=>{
-        if (e2eMocksEnabled) {
+        if ("TURBOPACK compile-time truthy", 1) {
             const filtered = status ? e2eComplaints.filter((c)=>(c.status || "").toUpperCase() === status.toUpperCase()) : e2eComplaints;
             const statusCounts = getComplaintSummary();
             return {
@@ -621,22 +617,18 @@ const authService = {
                 }
             };
         }
-        const response = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].get(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$constants$2f$endpoints$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ENDPOINTS"].GET_COMPLAINTS, {
-            params: {
-                page,
-                limit,
-                status
-            }
-        });
-        return (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["unwrapResponse"])(response);
+        //TURBOPACK unreachable
+        ;
+        const response = undefined;
     },
     getComplaint: async (id)=>{
-        if (e2eMocksEnabled) return e2eComplaints.find((c)=>c._id === id || c.complaint_id === id) || e2eComplaints[0];
-        const response = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].get(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$constants$2f$endpoints$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ENDPOINTS"].GET_COMPLAINT(id));
-        return (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["unwrapResponse"])(response);
+        if ("TURBOPACK compile-time truthy", 1) return e2eComplaints.find((c)=>c._id === id || c.complaint_id === id) || e2eComplaints[0];
+        //TURBOPACK unreachable
+        ;
+        const response = undefined;
     },
     createComplaint: async (complaintData)=>{
-        if (e2eMocksEnabled) {
+        if ("TURBOPACK compile-time truthy", 1) {
             return {
                 id: "e2e-created-1",
                 _id: "e2e-created-1",
@@ -647,8 +639,9 @@ const authService = {
                 ...complaintData
             };
         }
-        const response = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].post(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$constants$2f$endpoints$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ENDPOINTS"].CREATE_COMPLAINT, complaintData);
-        return (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["unwrapResponse"])(response);
+        //TURBOPACK unreachable
+        ;
+        const response = undefined;
     },
     getToken: ()=>{
         if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
@@ -661,17 +654,19 @@ const authService = {
         return false;
     },
     getMe: async ()=>{
-        if (e2eMocksEnabled) return getRoleProfile(getMockRole());
-        const res = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].get(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$constants$2f$endpoints$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ENDPOINTS"].GET_PROFILE);
-        return (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["unwrapResponse"])(res);
+        if ("TURBOPACK compile-time truthy", 1) return getRoleProfile(getMockRole());
+        //TURBOPACK unreachable
+        ;
+        const res = undefined;
     },
     // ─── SUPER ADMIN ─────────────────────────────────────────────────────────────
     getAdminStats: async ()=>{
-        if (e2eMocksEnabled) return {
+        if ("TURBOPACK compile-time truthy", 1) return {
             stats: getComplaintSummary()
         };
-        const res = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].get("/admin/stats");
-        return (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["unwrapResponse"])(res);
+        //TURBOPACK unreachable
+        ;
+        const res = undefined;
     },
     // ─── DISTRICT ADMIN ──────────────────────────────────────────────────────────
     getInspectors: async ()=>{
@@ -688,7 +683,7 @@ const authService = {
     },
     // ─── INSPECTOR ───────────────────────────────────────────────────────────────
     getWardComplaints: async ({ page = 1, limit = 20, status } = {})=>{
-        if (e2eMocksEnabled) {
+        if ("TURBOPACK compile-time truthy", 1) {
             const source = getWardComplaints();
             const filtered = status ? source.filter((complaint)=>(complaint.status || "").toUpperCase() === status.toUpperCase()) : source;
             return {
@@ -697,15 +692,10 @@ const authService = {
                 limit
             };
         }
-        const params = {
-            page,
-            limit
-        };
-        if (status) params.status = status;
-        const res = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].get("/inspector/complaints", {
-            params
-        });
-        return (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["unwrapResponse"])(res);
+        //TURBOPACK unreachable
+        ;
+        const params = undefined;
+        const res = undefined;
     },
     getWardWorkers: async ()=>{
         const res = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].get("/inspector/workers");
@@ -713,7 +703,7 @@ const authService = {
     },
     // ─── WORKER ──────────────────────────────────────────────────────────────────
     getAssignedComplaints: async ({ page = 1, limit = 20, status } = {})=>{
-        if (e2eMocksEnabled) {
+        if ("TURBOPACK compile-time truthy", 1) {
             const source = getAssignedComplaints();
             const filtered = status ? source.filter((complaint)=>(complaint.status || "").toUpperCase() === status.toUpperCase()) : source;
             return {
@@ -722,18 +712,13 @@ const authService = {
                 limit
             };
         }
-        const params = {
-            page,
-            limit
-        };
-        if (status) params.status = status;
-        const res = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].get("/worker/complaints", {
-            params
-        });
-        return (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["unwrapResponse"])(res);
+        //TURBOPACK unreachable
+        ;
+        const params = undefined;
+        const res = undefined;
     },
     getWardsByDistrict: async (districtId, { page = 1, is_active = true, limit = 60 } = {})=>{
-        if (e2eMocksEnabled) {
+        if ("TURBOPACK compile-time truthy", 1) {
             const wards = e2eWardsByDistrict[String(districtId)] || e2eWardsByDistrict["e2e-district-1"];
             return {
                 data: clone(wards.slice(0, limit)),
@@ -743,32 +728,22 @@ const authService = {
                 }
             };
         }
-        const res = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].get(`/wards/district/${districtId}`, {
-            params: {
-                page,
-                is_active,
-                limit
-            }
-        });
-        return (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["unwrapResponse"])(res);
+        //TURBOPACK unreachable
+        ;
+        const res = undefined;
     },
     // ─── WARD MANAGEMENT ─────────────────────────────────────────────────────────
     getWards: async ({ page = 1, limit = 20, is_active = true } = {})=>{
-        if (e2eMocksEnabled) return {
+        if ("TURBOPACK compile-time truthy", 1) return {
             data: clone(e2eWardsByDistrict["e2e-district-1"].slice(0, limit)),
             meta: {
                 page,
                 is_active
             }
         };
-        const res = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].get("/wards/district", {
-            params: {
-                page,
-                limit,
-                is_active
-            }
-        });
-        return (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["unwrapResponse"])(res);
+        //TURBOPACK unreachable
+        ;
+        const res = undefined;
     },
     getWardDetail: async (wardId)=>{
         const res = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].get(`/wards/${wardId}`);
@@ -786,23 +761,26 @@ const authService = {
     },
     // ─── DASHBOARD ROLE-SPECIFIC ────────────────────────────────────────────────
     getInspectorDashboard: async ()=>{
-        if (e2eMocksEnabled) return getDashboardData("INSPECTOR");
-        const res = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].get("/dashboard/inspector/dashboard");
-        return (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["unwrapResponse"])(res);
+        if ("TURBOPACK compile-time truthy", 1) return getDashboardData("INSPECTOR");
+        //TURBOPACK unreachable
+        ;
+        const res = undefined;
     },
     getDistrictAdminDashboard: async ()=>{
-        if (e2eMocksEnabled) return getDashboardData("DISTRICT_ADMIN");
-        const res = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].get("/dashboard/district-admin/dashboard");
-        return (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["unwrapResponse"])(res);
+        if ("TURBOPACK compile-time truthy", 1) return getDashboardData("DISTRICT_ADMIN");
+        //TURBOPACK unreachable
+        ;
+        const res = undefined;
     },
     getWorkerDashboard: async ()=>{
-        if (e2eMocksEnabled) return getDashboardData("WORKER");
-        const res = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].get("/dashboard/worker/dashboard");
-        return (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["unwrapResponse"])(res);
+        if ("TURBOPACK compile-time truthy", 1) return getDashboardData("WORKER");
+        //TURBOPACK unreachable
+        ;
+        const res = undefined;
     },
     // ─── INSPECTOR COMPLAINT ACTIONS ─────────────────────────────────────────────
     inspectorStartWork: async (complaintId)=>{
-        if (e2eMocksEnabled) {
+        if ("TURBOPACK compile-time truthy", 1) {
             const complaint = getComplaint(complaintId);
             if (!complaint) return null;
             const previousStatus = complaint.status || "OPEN";
@@ -815,11 +793,12 @@ const authService = {
             });
             return clone(complaint);
         }
-        const res = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].put(`/inspector/complaints/${complaintId}/start-work`);
-        return (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["unwrapResponse"])(res);
+        //TURBOPACK unreachable
+        ;
+        const res = undefined;
     },
     inspectorRejectComplaint: async (complaintId)=>{
-        if (e2eMocksEnabled) {
+        if ("TURBOPACK compile-time truthy", 1) {
             const complaint = getComplaint(complaintId);
             if (!complaint) return null;
             const previousStatus = complaint.status || "OPEN";
@@ -833,11 +812,12 @@ const authService = {
             });
             return clone(complaint);
         }
-        const res = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].put(`/inspector/complaints/${complaintId}/reject`);
-        return (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["unwrapResponse"])(res);
+        //TURBOPACK unreachable
+        ;
+        const res = undefined;
     },
     inspectorResolveComplaint: async (complaintId)=>{
-        if (e2eMocksEnabled) {
+        if ("TURBOPACK compile-time truthy", 1) {
             const complaint = getComplaint(complaintId);
             if (!complaint) return null;
             const previousStatus = complaint.status || "IN_PROGRESS";
@@ -850,21 +830,23 @@ const authService = {
             });
             return clone(complaint);
         }
-        const res = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].put(`/inspector/complaints/${complaintId}/resolve`);
-        return (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["unwrapResponse"])(res);
+        //TURBOPACK unreachable
+        ;
+        const res = undefined;
     },
     getDistricts: async ()=>{
-        if (e2eMocksEnabled) return {
+        if ("TURBOPACK compile-time truthy", 1) return {
             data: clone(e2eDistricts),
             meta: {
                 total_records: e2eDistricts.length
             }
         };
-        const response = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].get(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$constants$2f$endpoints$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ENDPOINTS"].GET_DISTRICTS);
-        return (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["unwrapResponse"])(response);
+        //TURBOPACK unreachable
+        ;
+        const response = undefined;
     },
     createComplaint: async (complaintData)=>{
-        if (e2eMocksEnabled) {
+        if ("TURBOPACK compile-time truthy", 1) {
             const complaint = {
                 id: `e2e-created-${e2eComplaints.length + 1}`,
                 _id: `e2e-created-${e2eComplaints.length + 1}`,
@@ -897,11 +879,12 @@ const authService = {
             ];
             return clone(complaint);
         }
-        const response = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].post(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$constants$2f$endpoints$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ENDPOINTS"].CREATE_COMPLAINT, complaintData);
-        return (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["unwrapResponse"])(response);
+        //TURBOPACK unreachable
+        ;
+        const response = undefined;
     },
     updateComplaintStatus: async (id, status)=>{
-        if (e2eMocksEnabled) {
+        if ("TURBOPACK compile-time truthy", 1) {
             const complaint = getComplaint(id);
             if (!complaint) return null;
             const previousStatus = complaint.status || "OPEN";
@@ -914,13 +897,12 @@ const authService = {
             });
             return clone(complaint);
         }
-        const response = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].put(`/complaints/${id}/status`, {
-            status
-        });
-        return (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["unwrapResponse"])(response);
+        //TURBOPACK unreachable
+        ;
+        const response = undefined;
     },
     addComplaintNote: async (id, payload)=>{
-        if (e2eMocksEnabled) {
+        if ("TURBOPACK compile-time truthy", 1) {
             const complaint = getComplaint(id);
             if (!complaint) return null;
             complaint.inspector_note = payload.text;
@@ -932,8 +914,9 @@ const authService = {
             });
             return clone(complaint);
         }
-        const response = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].put(`/complaints/${id}/note`, payload);
-        return (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["unwrapResponse"])(response);
+        //TURBOPACK unreachable
+        ;
+        const response = undefined;
     }
 };
 const __TURBOPACK__default__export__ = authService;
