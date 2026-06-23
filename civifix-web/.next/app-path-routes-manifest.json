@@ -1,0 +1,14 @@
+{
+  "/(dashboard)/complaints/[id]/page": "/complaints/[id]",
+  "/(dashboard)/complaints/[id]/track/page": "/complaints/[id]/track",
+  "/(dashboard)/complaints/create/page": "/complaints/create",
+  "/(dashboard)/complaints/page": "/complaints",
+  "/(dashboard)/dashboard/page": "/dashboard",
+  "/(dashboard)/profile/page": "/profile",
+  "/_not-found/page": "/_not-found",
+  "/favicon.ico/route": "/favicon.ico",
+  "/login/page": "/login",
+  "/page": "/",
+  "/signup/page": "/signup",
+  "/splash/page": "/splash"
+}

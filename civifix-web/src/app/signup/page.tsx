@@ -56,10 +56,9 @@ export default function SignupPage() {
 
   useEffect(() => {
     // Fetch districts on mount
-    fetch(process.env.NEXT_PUBLIC_API_URL + "/admin/districts?active_only=false")
-      .then(res => res.json())
-      .then(json => {
-        setDistricts(json.data || []);
+    authService.getDistricts()
+      .then((data) => {
+        setDistricts(Array.isArray(data) ? data : data?.data || []);
         setLoadingDistricts(false);
       })
       .catch(err => {
